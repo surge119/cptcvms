@@ -43,13 +43,14 @@ qemu-img convert -O qcow2 2023-finals-team-01-payment-web-a8fb8224.vmdk cptc-pay
 4. When hovering over the first entry, press `e` then scroll to the line that starts with `linux`.
 
    - Delete `console=tty1 console=ttyS0`
+   - Change `ro` to `rw`
    - Append `init=/bin/sh`
    - Press `ctrl+x`
 
 5. Remount filesystem and change password
 
 ```sh
-# Remount filesystem
+# Remount filesystem (if the filesystem fails to mount as rw on boot)
 mount -o remount,rw /
 
 # Change password
