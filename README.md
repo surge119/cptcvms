@@ -11,13 +11,13 @@ The following are the credentials
   - User: `root`
   - Password: `cptcadmin`
 
-- Windows:
+- Windows (all except kiosks):
   - User: `Administrator`
-  - Password: ``
+  - Password: `cptcadminA1!`
 
 ## Setup
 
-Since the passwords to the VMs are unknown, we must first change the passwords. For linux machines, we just change the boot parameters such that we boot into a root shell, then we can remount the filesystem as r/w and then change the password with `passwd`.
+Since the passwords to the VMs are unknown, we must first change the passwords. For linux machines, we just change the boot parameters such that we boot into a root shell, then we can remount the filesystem as r/w and then change the password with `passwd`. For windows, we change the binary for sticky keys (via a Windows PE bootable usb) and then we can access a command prompt from the login page
 
 Linux Steps (done on Ubuntu 22.04 with virt-manager)
 
@@ -47,12 +47,38 @@ qemu-img convert -O qcow2 2023-finals-team-01-payment-web-a8fb8224.vmdk cptc-pay
    - Append `init=/bin/sh`
    - Press `ctrl+x`
 
-5. Remount filesystem and change password
+Windows Steps (done on Ubuntu 22.04 with virt-manager)
+
+This requires a Windows PE usb stick.
+
+1. Follows steps 1 & 2 from the Linux section above (but change windows specific things)
+
+- In addition, select `Customize configuration before install` at step 4 of creating new vm
+- Then select next and at the next page click `Add Hardware`
+- Select `USB Host Device` -> choose your WinPE usb -> `Finish`
+- Select `Boot Options` -> enable your usb device and move it to the top
+- Select `Enable boot menu` with `Boot Options`
+- Finish setting up the VM
+
+2. Start the VM and boot into WinPE
+
+Use the following commands
 
 ```sh
-# Remount filesystem (if the filesystem fails to mount as rw on boot)
-mount -o remount,rw /
+C:
+cd Windows\system32
+move sethc.exe sethc.back
+copy cmd.exe sethc.exe
+```
 
-# Change password
-passwd
+Wait a few seconds for files to copy then power off the vm
+
+3. Boot the VM into the qcow2 image (windows)
+
+4. Press `shift` 5 times to open a command prompt
+
+5. Use the following command to change the password
+
+```sh
+net user Administrator cptcadminA1!
 ```
