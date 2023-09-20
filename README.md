@@ -82,3 +82,9 @@ Wait a few seconds for files to copy then power off the vm
 ```sh
 net user Administrator cptcadminA1!
 ```
+
+## AWS EC2 Helper
+
+```sh
+sudo apt update && sudo apt install -y qemu-utils p7zip-full && sudo snap install aws-cli --classic
+```

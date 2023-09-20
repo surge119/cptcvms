@@ -1,8 +1,4 @@
 terraform {
-  backend "local" {
-    path = "./state/"
-  }
-
   required_providers {
     aws = {
       source  = "hashicorp/aws"

@@ -2,24 +2,28 @@
 aws s3 cp s3://cptc-vms/cptc-payment-web.qcow2 ./cptc-payment-web.qcow2
 
 qemu-img convert -O raw cptc-payment-web.qcow2 cptc-payment-web.raw
+
+aws ec2 import-image --description "CPTC VM Import" --disk-containers "file:///home/ubuntu/vms/config.json"
+
+aws ec2 describe-import-image-tasks --import-task-ids import-ami-07aab4494a9ec633f
 ```
 
-Generate password
-```sh
-openssl passwd -6 -salt balls cptcadmin
+```json
+[
+  {
+    "Description": "CPTC VM Import",
+    "Format": "raw",
+    "UserBucket": {
+        "S3Bucket": "cptc-vms",
+        "S3Key": "cptc-payment-web.raw"
+    }
+  }
+]
 ```
 
-Password
-```
-# og
-root:$6$Hn2oasenzcqjdbxn$WcaM.iQ2dCl1a6Zzf/00GUSjuC3u.DK7s5st42Thuk5Yvd1PzA4GUD6XWijvRu/J3pZum.LY.9vTkLnK0toJV/:19374:0:99999:7:::
+https://docs.aws.amazon.com/vm-import/latest/userguide/required-permissions.html
 
-# New
-root:$6$balls$bHzICSaXxRyVH7tN.T02BBZ4Ut4xOKwT5IAzmu8mj.1ssDBtTjkL8Bk2IFYKm/XzNA7.WFAT7/VVg894lo3s31:19374:0:99999:7:::
-```
-
-```
-sudo apt update
-
-sudo apt install p7zip-full
-```
+progress
+- doapi
+- ldap
+- 
