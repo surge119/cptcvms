@@ -66,7 +66,6 @@ class VMConverter(threading.Thread):
         proc = subprocess.Popen(command, stdout=subprocess.PIPE, text=True)
         while proc.poll() is None:
             self.progress.append(proc.stdout.readline())
-            # print("Read:", proc.stdout.readline())
 
     def download(self) -> None:
         self.status = VMConverterStatus.DOWNLOADING
@@ -109,7 +108,7 @@ class VMConverter(threading.Thread):
             case _:
                 prog = "TEST"
 
-        return f"Converting: {self.vm}\n\tStatus: {self.status}\n\tProgress:\n{prog}"
+        return f"Converting: {self.vm}\n\tProgress:\n{prog}"
 
 
 def import_image(client, vm, vm_path):
@@ -133,6 +132,13 @@ def import_image(client, vm, vm_path):
     )
 
     return res["ImportTaskId"]
+
+
+def import_image_status(client, ids):
+    res = client.describe_import_image_tasks(
+        ImportTaskIds=ids,
+    )
+    return res
 
 
 if __name__ == "__main__":
@@ -170,4 +176,9 @@ if __name__ == "__main__":
             json.dump(info, f)
 
     if args.status:
-        status = {}
+        ec2_client = boto3.client("ec2")
+        with open("output.json", "r") as f:
+            print(f.read())
+            # status = import_image_status(ec2_client, [])
+            # with open("status.json", "w") as ff:
+            #     json.dump(status, ff)
