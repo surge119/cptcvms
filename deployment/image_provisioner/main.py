@@ -9,17 +9,21 @@ import threading
 import boto3
 
 
-bucket = "s3://cptc-vms/"
-base_path = "cptc-{}"
-raw_ext = ".raw"
-comp_ext = f"{raw_ext}.7z"
+bucket = "cptc-vms"
+bucket_path = f"s3://{bucket}/"
+base_key = "cptc-{}"
+raw_extension = ".raw"
+compressed_extenstion = f"{raw_extension}.7z"
 
-s3_ini_path = f"{bucket}{base_path}{comp_ext}"
-s3_out_path = f"./{base_path}{comp_ext}"
+compressed_key = f"{base_key}{compressed_extenstion}"
+raw_key = f"{base_key}{raw_extension}"
 
-raw_key = f"{base_path}{raw_ext}"
+s3_ini_path = f"{bucket_path}{base_key}{compressed_extenstion}"
+s3_out_path = f"./{base_key}{compressed_extenstion}"
+
+raw_key = f"{base_key}{raw_extension}"
 raw_path = f"./{raw_key}"
-s3_upl_path = f"{bucket}{raw_key}"
+s3_upl_path = f"{bucket_path}{raw_key}"
 
 vms = [
     # "adcs",
@@ -50,9 +54,10 @@ class VMConverterStatus(enum.Enum):
 
 
 class VMConverter(threading.Thread):
-    def __init__(self, vm: str) -> None:
+    def __init__(self, vm: str, s3_client) -> None:
         super(VMConverter, self).__init__()
         self.vm = vm
+        self.client = s3_client
         self.status = VMConverterStatus.INITIALIZING
         self.progress = ["Waiting"]
         self.is_finished = False
@@ -69,15 +74,19 @@ class VMConverter(threading.Thread):
 
     def download(self) -> None:
         self.status = VMConverterStatus.DOWNLOADING
-        self.exec(
-            [
-                "aws",
-                "s3",
-                "cp",
-                s3_ini_path.format(self.vm),
-                s3_out_path.format(self.vm),
-            ]
+        metdata = self.client.head_object(
+            Bucket=bucket, Key=compressed_key.format(self.vm)
         )
+        size = int(metdata.get("ContentLength", 0))
+        download_progress = 0
+
+        def progress(chunk):
+            download_progress += chunk
+
+        with open(compressed_key.format(self.vm), "wb") as f:
+            self.client.download_fileobj(
+                bucket, compressed_key.format(self.vm), f, Callback=progress
+            )
 
     def extract(self) -> None:
         self.status = VMConverterStatus.EXTRACTING
@@ -106,9 +115,9 @@ class VMConverter(threading.Thread):
             case VMConverterStatus.UPLOADING:
                 prog = self.progress[-1]
             case _:
-                prog = "TEST"
+                prog = f"Unknown State...: {self.status}"
 
-        return f"Converting: {self.vm}\n\tProgress:\n{prog}"
+        return f"{self.status} {self.vm}:{prog}"
 
 
 def import_image(client, vm, vm_path):
