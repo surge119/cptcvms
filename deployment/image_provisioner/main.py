@@ -75,27 +75,14 @@ class VMConverter(threading.Thread):
 
     def download(self) -> None:
         self.status = VMConverterStatus.DOWNLOADING
-        metdata = self.client.head_object(
-            Bucket=bucket, Key=compressed_key.format(self.vm)
-        )
-        size = int(metdata.get("ContentLength", 0))
-
-        self.start_time = time.time()
-
-        def progress(chunk):
-            self.download_progress += chunk
-            fmt_progress = round((self.download_progress / size) * 100, 2)
-            speed = (self.download_progress / 1000000) / (time.time() - self.start_time)
-
-            self.progress = (
-                f"Download: {fmt_progress}% of {size / 1000000000} @ {speed}Mb/S"
-            )
-
-        self.client.download_file(
-            bucket,
-            compressed_key.format(self.vm),
-            compressed_key.format(self.vm),
-            Callback=progress,
+        self.exec(
+            [
+                "aws",
+                "s3",
+                "cp",
+                s3_ini_path.format(self.vm),
+                s3_out_path.format(self.vm),
+            ]
         )
 
     def extract(self) -> None:
@@ -119,7 +106,7 @@ class VMConverter(threading.Thread):
             case VMConverterStatus.INITIALIZING:
                 prog = "Initializing"
             case VMConverterStatus.DOWNLOADING:
-                prog = self.progress
+                prog = self.progress[-1]
             case VMConverterStatus.EXTRACTING:
                 prog = "Extracting..."
             case VMConverterStatus.UPLOADING:
