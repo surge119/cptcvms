@@ -26,22 +26,22 @@ raw_path = f"./{raw_key}"
 s3_upl_path = f"{bucket_path}{raw_key}"
 
 vms = [
-    # "adcs",
+    "adcs",
     "dc01",
     "doapi",
-    # "hms",
-    # "kiosk01",
-    # "kiosk02",
-    # "kiosk03",
-    # "kiosk04",
-    # "ldap",
-    # "lps",
-    # "media",
-    # "payment-db",
-    # "payment-web",
-    # "profiler",
-    # "workstation01",
-    # "workstation02",
+    "hms",
+    "kiosk01",
+    "kiosk02",
+    "kiosk03",
+    "kiosk04",
+    "ldap",
+    "lps",
+    "media",
+    "payment-db",
+    "payment-web",
+    "profiler",
+    "workstation01",
+    "workstation02",
 ]
 
 
@@ -60,6 +60,7 @@ class VMConverter(threading.Thread):
         self.client = s3_client
         self.status = VMConverterStatus.INITIALIZING
         self.progress = ["Waiting"]
+        self.download_progress = 0
         self.is_finished = False
 
     def run(self):
@@ -78,25 +79,34 @@ class VMConverter(threading.Thread):
             Bucket=bucket, Key=compressed_key.format(self.vm)
         )
         size = int(metdata.get("ContentLength", 0))
-        download_progress = 0
+
+        self.start_time = time.time()
 
         def progress(chunk):
-            download_progress += chunk
+            self.download_progress += chunk
+            fmt_progress = round((self.download_progress / size) * 100, 2)
+            speed = (self.download_progress / 1000000) / (time.time() - self.start_time)
 
-        with open(compressed_key.format(self.vm), "wb") as f:
-            self.client.download_fileobj(
-                bucket, compressed_key.format(self.vm), f, Callback=progress
+            self.progress = (
+                f"Download: {fmt_progress}% of {size / 1000000000} @ {speed}Mb/S"
             )
+
+        self.client.download_file(
+            bucket,
+            compressed_key.format(self.vm),
+            compressed_key.format(self.vm),
+            Callback=progress,
+        )
 
     def extract(self) -> None:
         self.status = VMConverterStatus.EXTRACTING
-        self.exec(["7z", "x", s3_out_path.format(self.vm)])
+        # self.exec(["7z", "x", s3_out_path.format(self.vm)])
 
     def upload(self) -> None:
         self.status = VMConverterStatus.UPLOADING
-        self.exec(
-            ["aws", "s3", "cp", raw_path.format(self.vm), s3_upl_path.format(self.vm)]
-        )
+        # self.exec(
+        #     ["aws", "s3", "cp", raw_path.format(self.vm), s3_upl_path.format(self.vm)]
+        # )
         self.status = VMConverterStatus.DONE
         self.is_finished = True
 
@@ -109,7 +119,7 @@ class VMConverter(threading.Thread):
             case VMConverterStatus.INITIALIZING:
                 prog = "Initializing"
             case VMConverterStatus.DOWNLOADING:
-                prog = self.progress[-1]
+                prog = self.progress
             case VMConverterStatus.EXTRACTING:
                 prog = "Extracting..."
             case VMConverterStatus.UPLOADING:
@@ -160,8 +170,9 @@ if __name__ == "__main__":
 
     if args.convert:
         l = []
+        s3_client = boto3.client("s3")
         for vm in vms:
-            conv = VMConverter(vm)
+            conv = VMConverter(vm, s3_client)
             l.append(conv)
             conv.start()
 
