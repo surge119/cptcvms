@@ -26,22 +26,22 @@ raw_path = f"./{raw_key}"
 s3_upl_path = f"{bucket_path}{raw_key}"
 
 vms = [
-    "adcs",
-    "dc01",
-    "doapi",
-    "hms",
-    "kiosk01",
-    "kiosk02",
-    "kiosk03",
-    "kiosk04",
-    "ldap",
-    "lps",
-    "media",
-    "payment-db",
+    # "adcs",
+    # "dc01",
+    # "doapi",
+    # "hms",
+    # "kiosk01",
+    # "kiosk02",
+    # "kiosk03",
+    # "kiosk04",
+    # "ldap",
+    # "lps",
+    # "media",
+    # "payment-db",
     "payment-web",
-    "profiler",
-    "workstation01",
-    "workstation02",
+    # "profiler",
+    # "workstation01",
+    # "workstation02",
 ]
 
 
@@ -102,13 +102,13 @@ class VMConverter(threading.Thread):
 
     def extract(self) -> None:
         self.status = VMConverterStatus.EXTRACTING
-        # self.exec(["7z", "x", s3_out_path.format(self.vm)])
+        self.exec(["7z", "x", s3_out_path.format(self.vm)])
 
     def upload(self) -> None:
         self.status = VMConverterStatus.UPLOADING
-        # self.exec(
-        #     ["aws", "s3", "cp", raw_path.format(self.vm), s3_upl_path.format(self.vm)]
-        # )
+        self.exec(
+            ["aws", "s3", "cp", raw_path.format(self.vm), s3_upl_path.format(self.vm)]
+        )
         self.status = VMConverterStatus.DONE
         self.is_finished = True
 
@@ -200,7 +200,10 @@ if __name__ == "__main__":
     if args.status:
         ec2_client = boto3.client("ec2")
         with open("output.json", "r") as f:
-            print(f.read())
-            # status = import_image_status(ec2_client, [])
-            # with open("status.json", "w") as ff:
-            #     json.dump(status, ff)
+            info = json.load(f)
+            tasks = []
+            for t in info:
+                tasks.append(info[t])
+            status = import_image_status(ec2_client, tasks)
+            with open("status.json", "w") as ff:
+                json.dump(status, ff)

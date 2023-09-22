@@ -10,7 +10,7 @@ variable "ports" {
 
 variable "instance_type" {
   type    = string
-  default = "c6in.xlarge"
+  default = "c6in.8xlarge"
 }
 
 variable "ami" {

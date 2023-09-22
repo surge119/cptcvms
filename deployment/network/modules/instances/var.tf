@@ -1,5 +1,5 @@
 variable "name" {
-  type = string
+  type    = string
   default = "tf"
 }
 
@@ -12,11 +12,13 @@ variable "key_name" {
 }
 
 variable "instances" {
-  type = list(object ({
-    name = string
-    subnet_id = string
-    private_ip = string
-    ports = list(number)
-    public_ip = bool
+  type = list(object({
+    name          = string
+    ami           = string
+    instance_type = string
+    subnet_id     = string
+    private_ip    = string
+    ports         = list(number)
+    public_ip     = bool
   }))
 }

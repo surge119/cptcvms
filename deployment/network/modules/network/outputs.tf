@@ -2,18 +2,26 @@ output "vpc_id" {
   value = aws_vpc.vpc.id
 }
 
-output "lab_subnet" {
-  value = aws_subnet.subnets["lab"]
+output "corporate_subnet_id" {
+  value = aws_subnet.subnets["corporate"].id
 }
 
-output "blue_subnet" {
-  value = aws_subnet.subnets["blue"]
+output "guest_subnet_id" {
+  value = aws_subnet.subnets["guest"].id
 }
 
-output "red_subnet" {
-  value = aws_subnet.subnets["red"]
+output "vpn_subnet_id" {
+  value = aws_subnet.subnets["vpn"].id
 }
 
-output "vpn_subnet" {
-  value = aws_subnet.subnets["vpn"]
+output "blue_subnet_id" {
+  value = aws_subnet.subnets["blue"].id
+}
+
+output "red_subnet_id" {
+  value = aws_subnet.subnets["red"].id
+}
+
+output "infra_subnet_id" {
+  value = aws_subnet.subnets["infra"].id
 }
