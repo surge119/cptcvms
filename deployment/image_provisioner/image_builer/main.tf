@@ -86,26 +86,93 @@ resource "aws_security_group" "security_group" {
   }
 }
 
-resource "aws_eip" "elastic_ip" {
-  instance = aws_instance.ec2_instance.id
+resource "aws_iam_role" "admin_role" {
+  name = "${var.name}-ec2-administrator-role"
+
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "ec2.amazonaws.com"
+        },
+        "Action" : "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_instance_profile" "admin_profile" {
+  name = "${var.name}-ec2-administrator-profile"
+  role = aws_iam_role.admin_role.name
+}
+
+resource "aws_iam_policy" "admin_policy" {
+  name        = "${var.name}-ec2-administrator-policy"
+  path        = "/"
+  description = "${var.name} Policy for EC2"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy_attachment" "admin_policy_attachment" {
+  name = "${var.name}-ec2-administrator-policy-attachment"
+
+  policy_arn = aws_iam_policy.admin_policy.arn
+  roles      = [aws_iam_role.admin_role.name]
 }
 
 resource "aws_instance" "ec2_instance" {
   # Ubuntu 22.04 ami
-  ami = var.ami
+  count                = 2
+  ami                  = var.ami
+  iam_instance_profile = aws_iam_instance_profile.admin_profile.name
 
   instance_type = var.instance_type
 
-  key_name               = aws_key_pair.key_pair.key_name
-  subnet_id              = aws_subnet.subnet.id
-  vpc_security_group_ids = [aws_security_group.security_group.id]
+  key_name                    = aws_key_pair.key_pair.key_name
+  subnet_id                   = aws_subnet.subnet.id
+  vpc_security_group_ids      = [aws_security_group.security_group.id]
+  associate_public_ip_address = true
 
   root_block_device {
-    volume_size = 1000
+    volume_size = 70
     volume_type = "gp3"
   }
 
   tags = {
-    Name = "${var.name}-ec2"
+    Name = "${var.name}-${count.index}-ec2"
   }
+}
+
+locals {
+  ips     = [for instance in aws_instance.ec2_instance : instance.public_ip]
+  ips_str = join("\n", local.ips)
+}
+
+output "ips" {
+  value = [for instance in aws_instance.ec2_instance : instance.public_ip]
+}
+
+resource "local_file" "tf_ansible_inventory" {
+  content = <<-DOC
+    [targets]
+    ${local.ips_str}
+    DOC
+
+  filename = "./inventory.ini"
 }

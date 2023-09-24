@@ -1,3 +1,5 @@
 locals {
-  name = "cptc23"
+  name           = "cptc8"
+  vpc_cidr       = "10.0.0.0/16"
+  cptc8_instance = "t3a.medium"
 }

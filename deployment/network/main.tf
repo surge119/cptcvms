@@ -2,6 +2,7 @@ module "network" {
   source = "./modules/network"
   name   = local.name
 
+  vpc_cidr = local.vpc_cidr
   subnets = {
     corporate = "10.0.0.0/24",
     guest     = "10.0.200.0/24",
@@ -28,23 +29,74 @@ resource "aws_key_pair" "key_pair" {
   public_key = tls_private_key.public_key.public_key_openssh
 }
 
-module "instances" {
+module "corporate_instances" {
+  source = "./modules/instances"
+
+  name     = "${local.name}-corporate"
+  vpc_id   = module.network.vpc_id
+  key_name = aws_key_pair.key_pair.key_name
+  instances = [
+    {
+      name          = "payment-web"
+      ami           = "ami-012d19aacb8838ff6"
+      instance_type = local.cptc8_instance
+      subnet_id     = module.network.corporate_subnet_id
+      private_ip    = "10.0.0.200"
+      public_ip     = false
+      ports = [
+        {
+          port        = 22
+          protocol    = "tcp"
+          cidr_blocks = [local.vpc_cidr]
+        },
+      ]
+    }
+  ]
+}
+
+module "vpn_instances" {
   source = "./modules/instances"
 
   name     = local.name
   vpc_id   = module.network.vpc_id
   key_name = aws_key_pair.key_pair.key_name
-  instances = [{
-    ami        = "ami-053b0d53c279acc90"
-    name       = "vpn"
-    subnet_id  = module.network.vpn_subnet_id
-    private_ip = "10.0.50.50"
-    ports      = [22, 51820]
-    public_ip  = true
-    },
+  instances = [
     {
-      ami  = "ami-012d19aacb8838ff6"
-      name = ""
-  }]
+      name          = "wireguard_vpn"
+      ami           = "ami-0a0c8eebcdd6dcbd0" // Ubuntu
+      instance_type = "t4g.nano"
+      subnet_id     = module.network.vpn_subnet_id
+      private_ip    = "10.0.50.50"
+      public_ip     = true
+      ports = [
+        {
+          port        = 22
+          protocol    = "tcp"
+          cidr_blocks = ["0.0.0.0/0"]
+        },
+        {
+          port        = 51820
+          protocol    = "udp"
+          cidr_blocks = ["0.0.0.0/0"]
+        },
+      ]
+    }
+  ]
 }
 
+resource "local_file" "tf_ansible_vars" {
+  content = <<-DOC
+    tf_vpn_server_ip: ${module.vpn_instances.instances[0].ip}
+    DOC
+
+  filename = "./tf_ansible_vars.yml"
+}
+
+resource "local_file" "tf_ansible_inventory" {
+  content = <<-DOC
+    [vpn]
+    ${module.vpn_instances.instances[0].ip}
+    DOC
+
+  filename = "../ansible/vpn/inventory.ini"
+}

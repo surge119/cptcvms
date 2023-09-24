@@ -26,22 +26,22 @@ raw_path = f"./{raw_key}"
 s3_upl_path = f"{bucket_path}{raw_key}"
 
 vms = [
-    # "adcs",
-    # "dc01",
-    # "doapi",
-    # "hms",
-    # "kiosk01",
-    # "kiosk02",
-    # "kiosk03",
-    # "kiosk04",
-    # "ldap",
-    # "lps",
-    # "media",
-    # "payment-db",
+    "adcs",
+    "dc01",
+    "doapi",
+    "hms",
+    "kiosk01",
+    "kiosk02",
+    "kiosk03",
+    "kiosk04",
+    "ldap",
+    "lps",
+    "media",
+    "payment-db",
     "payment-web",
-    # "profiler",
-    # "workstation01",
-    # "workstation02",
+    "profiler",
+    "workstation01",
+    "workstation02",
 ]
 
 
@@ -146,7 +146,7 @@ def import_image(client, vm, vm_path):
             {
                 "ResourceType": "import-image-task",
                 "Tags": [
-                    {"Key": "Name", "Value": f"CPTC Vm {vm}"},
+                    {"Key": "Name", "Value": f"CPTC VM {vm}"},
                 ],
             },
         ],
@@ -162,11 +162,26 @@ def import_image_status(client, ids):
     return res
 
 
+def tag_images(client, data, statuses):
+    for vm in data:
+        for status in statuses["ImportImageTasks"]:
+            if status["ImportTaskId"] == data[vm]:
+                res = client.create_tags(
+                    Resources=[
+                        status["ImageId"],
+                    ],
+                    Tags=[
+                        {"Key": "Name", "Value": f"cptc8-{vm}"},
+                    ],
+                )
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Image Povisioner Helper")
     parser.add_argument("-c", "--convert", action="store_true")
     parser.add_argument("-i", "--import-image", action="store_true")
     parser.add_argument("-s", "--status", action="store_true")
+    parser.add_argument("-t", "--tag", action="store_true")
 
     args = parser.parse_args()
 
@@ -207,3 +222,10 @@ if __name__ == "__main__":
             status = import_image_status(ec2_client, tasks)
             with open("status.json", "w") as ff:
                 json.dump(status, ff)
+
+    if args.tag:
+        ec2_client = boto3.client("ec2")
+        with open("output.json", "r") as f, open("status.json", "r") as f1:
+            info = json.load(f)
+            status_list = json.load(f1)
+            tag_images(ec2_client, info, status_list)

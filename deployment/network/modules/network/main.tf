@@ -28,7 +28,8 @@ resource "aws_route_table" "route_table" {
 }
 
 resource "aws_subnet" "subnets" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id            = aws_vpc.vpc.id
+  availability_zone = "us-east-1a"
 
   for_each = var.subnets
 

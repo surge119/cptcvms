@@ -1,6 +1,5 @@
 variable "name" {
-  type    = string
-  default = "tf"
+  type = string
 }
 
 variable "vpc_id" {
@@ -18,7 +17,11 @@ variable "instances" {
     instance_type = string
     subnet_id     = string
     private_ip    = string
-    ports         = list(number)
     public_ip     = bool
+    ports = list(object({
+      port        = number
+      protocol    = string
+      cidr_blocks = list(string)
+    }))
   }))
 }
