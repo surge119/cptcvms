@@ -1,14 +1,14 @@
 import argparse
-import enum
+import configparser
 import json
-import os
-import subprocess
-import time
 import threading
 
 import boto3
+import paramiko
+from paramiko.client import SSHClient
 
 
+# CHANGE THIS IF DOING CUSTOM DEPLOYMENT
 bucket = "cptc-vms"
 bucket_path = f"s3://{bucket}/"
 base_key = "cptc-{}"
@@ -45,99 +45,48 @@ vms = [
 ]
 
 
-class VMConverterStatus(enum.Enum):
-    INITIALIZING = "Initializing"
-    DOWNLOADING = "Downloading"
-    EXTRACTING = "Extracting"
-    UPLOADING = "Uploading"
-    DONE = "Done"
-
-
 class VMConverter(threading.Thread):
-    def __init__(self, vm: str, s3_client) -> None:
+    def __init__(self, vm: str, host: str) -> None:
         super(VMConverter, self).__init__()
         self.vm = vm
-        self.client = s3_client
-        self.status = VMConverterStatus.INITIALIZING
-        self.progress = ["Waiting"]
-        self.is_finished = False
+        self.host = host
+        self.client = SSHClient()
+        self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self.client.connect(
+            host, username="ubuntu", key_filename="./image_builder/key.pem"
+        )
 
     def run(self):
+        self.exec(
+            "sudo apt update && sudo apt install -y p7zip-full && sudo snap install aws-cli --classic"
+        )
         self.download()
         self.extract()
         self.upload()
 
     def exec(self, command) -> None:
-        proc = subprocess.Popen(command, stdout=subprocess.PIPE, text=True)
-        while proc.poll() is None:
-            self.progress.append(proc.stdout.readline())
+        stdin, stdout, stderr = self.client.exec_command(command)
+        exit = stdout.channel.recv_exit_status()
+        print(f"Host: {self.host} Command: {command} Status: {exit}")
 
     def download(self) -> None:
-        self.status = VMConverterStatus.DOWNLOADING
-        metdata = self.client.head_object(
-            Bucket=bucket, Key=compressed_key.format(self.vm)
-        )
-        size = int(metdata.get("ContentLength", 0))
-        download_progress = 0
-
-        start_time = time.time()
-
-        def progress(chunk):
-            nonlocal download_progress
-
-            download_progress += chunk
-            fmt_progress = round((download_progress / size) * 100, 2)
-            speed = (download_progress / 1000000) / (time.time() - start_time)
-
-            self.progress = (
-                f"Download: {fmt_progress}% of {size / 1000000000} @ {speed}Mb/S"
-            )
-
-        self.client.download_file(
-            bucket,
-            compressed_key.format(self.vm),
-            compressed_key.format(self.vm),
-            Callback=progress,
+        self.exec(
+            f"aws s3 cp {s3_ini_path.format(self.vm)} {s3_out_path.format(self.vm)}"
         )
 
     def extract(self) -> None:
-        self.status = VMConverterStatus.EXTRACTING
-        self.exec(["7z", "x", s3_out_path.format(self.vm)])
+        self.exec(f"7z x {s3_out_path.format(self.vm)}")
 
     def upload(self) -> None:
-        self.status = VMConverterStatus.UPLOADING
-        self.exec(
-            ["aws", "s3", "cp", raw_path.format(self.vm), s3_upl_path.format(self.vm)]
-        )
-        self.status = VMConverterStatus.DONE
-        self.is_finished = True
-
-    def done(self) -> bool:
-        return self.is_finished
-
-    def __str__(self) -> str:
-        prog = None
-        match self.status:
-            case VMConverterStatus.INITIALIZING:
-                prog = "Initializing"
-            case VMConverterStatus.DOWNLOADING:
-                prog = self.progress
-            case VMConverterStatus.EXTRACTING:
-                prog = "Extracting..."
-            case VMConverterStatus.UPLOADING:
-                prog = self.progress[-1]
-            case _:
-                prog = f"Unknown State...: {self.status}"
-
-        return f"{self.status} {self.vm}:{prog}"
+        self.exec(f"aws s3 cp {raw_path.format(self.vm)} {s3_upl_path.format(self.vm)}")
 
 
 def import_image(client, vm, vm_path):
     res = client.import_image(
-        Description=f"CPTC VM Impor {vm}",
+        Description=f"CPTC VM Import {vm}",
         DiskContainers=[
             {
-                "Description": "CPTC VM Import {vm}",
+                "Description": f"CPTC VM Import {vm}",
                 "Format": "raw",
                 "UserBucket": {"S3Bucket": "cptc-vms", "S3Key": f"{vm_path}"},
             },
@@ -159,6 +108,19 @@ def import_image_status(client, ids):
     res = client.describe_import_image_tasks(
         ImportTaskIds=ids,
     )
+
+    def pretty_print(img_arg, status_arg, prog_arg):
+        print(f"{img_arg:16} {status_arg:10} {prog_arg}")
+
+    stats = res["ImportImageTasks"]
+    pretty_print("Image", "Status", "Progress")
+    for stat in stats:
+        img = stat["Description"].split(" ")[-1]
+        if "Progress" in stat:
+            pretty_print(img, stat["Status"], stat["Progress"])
+        else:
+            pretty_print(img, stat["Status"], "Done")
+
     return res
 
 
@@ -186,20 +148,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.convert:
-        l = []
-        s3_client = boto3.client("s3")
-        for vm in vms:
-            conv = VMConverter(vm, s3_client)
-            l.append(conv)
+        hosts = []
+        with open("./image_builder/inventory.ini", "r") as f:
+            while line := f.readline().strip():
+                hosts.append(line)
+        for index, vm in enumerate(vms):
+            conv = VMConverter(vm, hosts[index])
             conv.start()
-
-        while any(l):
-            os.system("clear")
-            for c in l:
-                if c.done():
-                    l.remove(c)
-                print(c)
-            time.sleep(0.1)
 
     if args.import_image:
         info = {}

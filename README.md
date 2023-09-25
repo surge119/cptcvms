@@ -17,6 +17,17 @@ The following are the credentials
 
 ## Setup
 
+Steps:
+
+1. Change passwords of VMs
+2. Convert, Compress, Upload VMs to S3
+3. Unpack & Import VMs
+4. Launch
+
+To optimize costs, the 1st and 2nd step are done only once. But the other two will be used whenever the network needs to be setup. Alternatively, only step 4 needs to be run, if the VMs are stored as AMIs (result of step 3), but it can be costly.
+
+### Change passwords of VMs
+
 Since the passwords to the VMs are unknown, we must first change the passwords. For linux machines, we just change the boot parameters such that we boot into a root shell, then we can remount the filesystem as r/w and then change the password with `passwd`. For windows, we change the binary for sticky keys (via a Windows PE bootable usb) and then we can access a command prompt from the login page
 
 Linux Steps (done on Ubuntu 22.04 with virt-manager)
@@ -83,8 +94,71 @@ Wait a few seconds for files to copy then power off the vm
 net user Administrator cptcadminA1!
 ```
 
-## AWS EC2 Helper
+### Convert, Compress, Upload VMs to S3
+
+Once the VMs have their passwords changed, they can be stored in S3. Optimally, they are stored as 7z compress `.raw` files.
+
+Each VM can be converted to a raw file with the following command.
+
+Convert - Note: The raw file is 50 GB is size...
 
 ```sh
-sudo apt update && sudo apt install -y qemu-utils p7zip-full && sudo snap install aws-cli --classic
+qemu-img convert -O raw ./cptc-payment-web.qcow2 ./cptc-payment-web.raw
 ```
+
+Compress - These are much smaller. They compress windows vms better than other formats (vmdk, qcow2)
+
+```sh
+7z a ./cptc-payment-web.raw.7z ./cptc-payment-web.raw
+```
+
+Once the are compressed, they can be uploaded to S3.
+
+To be uploaded to s3, create a bucket. Then upload the compressed file. For the scripts to be compatible, the naming format should be `cptc-{VM NAME}.raw.7z`
+
+### Unpack & Import VMs
+
+This process is used to unpack the 7z compressed raw images and then uploads the raw images to s3 to be converted to AMIs later. There are a few helper scripts in the `deployment/image_provisioner` directory.
+
+The following scripts exist:
+
+1. `deployment/image_provisioner/tf`
+
+- Terraform scripts to provision 16 EC2 instances used by the following script
+
+2. `deployment/image_provisioner/main.py`
+
+- Python script that:
+  - Uses each EC2 instance to download a compressed vm from s3
+  - Unpacks the vm
+  - Uploads the raw vm
+  - Imports the vm
+  - Tracks the status of the import task
+  - Tags the new AMI
+
+Terraform usage. Note: Terraform needs to be installed. Additionally, brand new AWS accounts may not have the quotas required for this. You may need to request a quota increase, or do this all on a single vm, though the python script wont work. The purpose of distributing the tasks is to make it faster.
+
+```sh
+cd deployment/image_provisioner/tf
+terraform apply
+```
+
+Python script. Note: There is a global variable `bucket` that will need to be changed to be your bucket name.
+
+```sh
+# SSH into each EC2 instance, download, uncompress, and upload vm. This can take ~20 min (maybe longer, maybe less).
+# The script may also break and the last command will hang, so check s3 every couple minutes to check if every vm has been uploaded
+python3 main.py -c
+
+# Import images - linux images take 15-20 min, win10 takes a little bit longer,
+# win server takes a long time... 2+ hours
+python3 main.py -i
+
+# Track progress
+python3 main.py -s
+
+# Tag AMIs - do this after every vm is imported
+python3 main.py -t
+```
+
+#### Launch

@@ -41,6 +41,10 @@ resource "aws_security_group" "security_group" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "${var.instances[count.index].name}-security_group"
+  }
 }
 
 resource "aws_security_group" "ping" {
@@ -54,5 +58,9 @@ resource "aws_security_group" "ping" {
     to_port     = -1
     protocol    = "icmp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.name}-icmp-security_group"
   }
 }

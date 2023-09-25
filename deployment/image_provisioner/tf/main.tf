@@ -138,7 +138,7 @@ resource "aws_iam_policy_attachment" "admin_policy_attachment" {
 
 resource "aws_instance" "ec2_instance" {
   # Ubuntu 22.04 ami
-  count                = 2
+  count                = 16
   ami                  = var.ami
   iam_instance_profile = aws_iam_instance_profile.admin_profile.name
 
@@ -170,7 +170,6 @@ output "ips" {
 
 resource "local_file" "tf_ansible_inventory" {
   content = <<-DOC
-    [targets]
     ${local.ips_str}
     DOC
 

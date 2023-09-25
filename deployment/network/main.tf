@@ -29,29 +29,22 @@ resource "aws_key_pair" "key_pair" {
   public_key = tls_private_key.public_key.public_key_openssh
 }
 
+data "aws_ami" "cptc-corp-payment-web" {
+  most_recent = true
+
+  filter {
+    name   = "tag:Name"
+    values = ["payment-web"]
+  }
+}
+
 module "corporate_instances" {
   source = "./modules/instances"
 
-  name     = "${local.name}-corporate"
-  vpc_id   = module.network.vpc_id
-  key_name = aws_key_pair.key_pair.key_name
-  instances = [
-    {
-      name          = "payment-web"
-      ami           = "ami-012d19aacb8838ff6"
-      instance_type = local.cptc8_instance
-      subnet_id     = module.network.corporate_subnet_id
-      private_ip    = "10.0.0.200"
-      public_ip     = false
-      ports = [
-        {
-          port        = 22
-          protocol    = "tcp"
-          cidr_blocks = [local.vpc_cidr]
-        },
-      ]
-    }
-  ]
+  name      = "${local.name}-corporate"
+  vpc_id    = module.network.vpc_id
+  key_name  = aws_key_pair.key_pair.key_name
+  instances = local.corporate_instances
 }
 
 module "vpn_instances" {
