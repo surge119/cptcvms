@@ -50,7 +50,7 @@ module "guest_instances" {
 module "vpn_instances" {
   source = "./modules/instances"
 
-  name     = local.name
+  name     = "${local.name}-vpn"
   vpc_id   = module.network.vpc_id
   key_name = aws_key_pair.key_pair.key_name
   instances = [
@@ -75,6 +75,46 @@ module "vpn_instances" {
         {
           port        = 51820
           protocol    = "udp"
+          cidr_blocks = ["0.0.0.0/0"]
+        },
+      ]
+    }
+  ]
+}
+
+module "infra_instances" {
+  source = "./modules/instances"
+
+  name     = local.name
+  vpc_id   = module.network.vpc_id
+  key_name = aws_key_pair.key_pair.key_name
+  instances = [
+    {
+      name          = "dns"
+      ami           = "ami-0a0c8eebcdd6dcbd0" // Ubuntu arm
+      instance_type = "t4g.nano"
+      subnet_id     = module.network.infra_subnet_id
+      private_ip    = "10.0.69.5"
+      public_ip     = true
+      ports = [
+        {
+          port        = 0
+          protocol    = "-1"
+          cidr_blocks = ["0.0.0.0/0"]
+        },
+      ]
+    },
+    {
+      name          = "scorestack"
+      ami           = "ami-0a0c8eebcdd6dcbd0" // Ubuntu arm
+      instance_type = "t4g.small"
+      subnet_id     = module.network.infra_subnet_id
+      private_ip    = "10.0.69.100"
+      public_ip     = false
+      ports = [
+        {
+          port        = 0
+          protocol    = "-1"
           cidr_blocks = ["0.0.0.0/0"]
         },
       ]

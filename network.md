@@ -5,7 +5,7 @@ This network contains the CPTC8 (2022-2023) vms with additional support machines
 ### Subnets
 
 | Network   | Subnet        | Description                              | Domain   |
-|-----------|---------------|------------------------------------------|----------|
+| --------- | ------------- | ---------------------------------------- | -------- |
 | Corporate | 10.0.0.0/24   | CPTC8 Corporate Network (Cozy Croissant) | corp.cc  |
 | Guest     | 10.0.200.0/24 | CPTC8 Guest Network (Cozy Croissant)     | guest.cc |
 | VPN       | 10.0.50.0/24  | VPN Network Used to Connect              | vpn.cc   |
@@ -16,7 +16,7 @@ This network contains the CPTC8 (2022-2023) vms with additional support machines
 #### Corporate (10.0.0.0/24)
 
 | Machine Name  | IP         | Purpose                              | AWS Instance | Domain                |
-|---------------|------------|--------------------------------------|--------------|-----------------------|
+| ------------- | ---------- | ------------------------------------ | ------------ | --------------------- |
 | adcs          | 10.0.0.6   | Active Directory Certificate Service | t3.medium    | adcs.corp.cc          |
 | dc01          | 10.0.0.5   | Active Directory Domain Controller   | t3.medium    | dc01.corp.cc          |
 | doapi         | 10.0.0.7   | Do API                               | t3.medium    | doapi.corp.cc         |
@@ -33,7 +33,7 @@ This network contains the CPTC8 (2022-2023) vms with additional support machines
 #### Guest (10.0.200.0/24)
 
 | Machine Name | IP           | Purpose | AWS Instance | Domain           |
-|--------------|--------------|---------|--------------|------------------|
+| ------------ | ------------ | ------- | ------------ | ---------------- |
 | kiosk01      | 10.0.200.101 | Kiosk 1 | t3.medium    | kiosk01.guest.cc |
 | kiosk02      | 10.0.200.102 | Kiosk 2 | t3.medium    | kiosk02.guest.cc |
 | kiosk03      | 10.0.200.103 | Kiosk 3 | t3.medium    | kiosk03.guest.cc |
@@ -42,22 +42,23 @@ This network contains the CPTC8 (2022-2023) vms with additional support machines
 #### VPN (10.0.50.0/24)
 
 | Machine Name | IP         | Purpose              | AWS Instance | Domain    |
-|--------------|------------|----------------------|--------------|-----------|
+| ------------ | ---------- | -------------------- | ------------ | --------- |
 | wg           | 10.0.50.50 | Wireguard VPN Server | t4g.small    | wg.vpn.cc |
 
 #### Blue (10.0.100.0/24)
 
 | Machine Name | IP           | Purpose              | AWS Instance | Domain        |
-|--------------|--------------|----------------------|--------------|---------------|
+| ------------ | ------------ | -------------------- | ------------ | ------------- |
 | wazuh        | 10.0.100.100 | Wazuh Logging Server | t4a.medium   | wazuh.blue.cc |
 
 #### Red (10.0.150.0/24)
 
-| Machine Name | IP | Purpose | AWS Instance | Domain |
-|--------------|----|---------|--------------|--------|
+| Machine Name | IP  | Purpose | AWS Instance | Domain |
+| ------------ | --- | ------- | ------------ | ------ |
 
 #### Infra (10.0.69.0/24)
 
-| Machine Name | IP         | Purpose              | AWS Instance | Domain              |
-|--------------|------------|----------------------|--------------|---------------------|
-| scorestack   | 10.0.69.69 | Wireguard VPN Server | t4g.small    | scorestack.infra.cc |
+| Machine Name | IP          | Purpose              | AWS Instance | Domain              |
+| ------------ | ----------- | -------------------- | ------------ | ------------------- |
+| dns          | 10.0.60.2   | DNS Server           | t4g.nano     | dns.infra.cc        |
+| scorestack   | 10.0.69.100 | Wireguard VPN Server | t4g.small    | scorestack.infra.cc |
