@@ -150,7 +150,8 @@ Python script. Note: There is a global variable `bucket` that will need to be ch
 # The script may also break and the last command will hang, so check s3 every couple minutes to check if every vm has been uploaded
 python3 main.py -c
 
-# Import images - linux images take 15-20 min, win10 takes a little bit longer,
+# Import images - linux images take 10-25 min, win10 & win2k16 take longer
+# up to 40 min (maybe less, maybe more. Those numbers are from my testing)
 # win server takes a long time... 2+ hours
 python3 main.py -i
 

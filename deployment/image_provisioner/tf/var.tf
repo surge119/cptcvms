@@ -10,12 +10,12 @@ variable "ports" {
 
 variable "instance_type" {
   type    = string
-  default = "c7i.large"
+  default = "c7g.large"
 }
 
 variable "ami" {
   type = string
   // Ubuntu
-  default = "ami-053b0d53c279acc90"
-  // default = "ami-0a0c8eebcdd6dcbd0"
+  // default = "ami-053b0d53c279acc90"
+  default = "ami-0a0c8eebcdd6dcbd0"
 }

@@ -52,9 +52,7 @@ class VMConverter(threading.Thread):
         self.host = host
         self.client = SSHClient()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        self.client.connect(
-            host, username="ubuntu", key_filename="./image_builder/key.pem"
-        )
+        self.client.connect(host, username="ubuntu", key_filename="./tf/key.pem")
 
     def run(self):
         self.exec(
@@ -149,7 +147,7 @@ if __name__ == "__main__":
 
     if args.convert:
         hosts = []
-        with open("./image_builder/inventory.ini", "r") as f:
+        with open("./tf/inventory.ini", "r") as f:
             while line := f.readline().strip():
                 hosts.append(line)
         for index, vm in enumerate(vms):
