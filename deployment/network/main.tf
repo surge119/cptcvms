@@ -29,15 +29,6 @@ resource "aws_key_pair" "key_pair" {
   public_key = tls_private_key.public_key.public_key_openssh
 }
 
-data "aws_ami" "cptc-corp-payment-web" {
-  most_recent = true
-
-  filter {
-    name   = "tag:Name"
-    values = ["payment-web"]
-  }
-}
-
 module "corporate_instances" {
   source = "./modules/instances"
 
@@ -45,6 +36,15 @@ module "corporate_instances" {
   vpc_id    = module.network.vpc_id
   key_name  = aws_key_pair.key_pair.key_name
   instances = local.corporate_instances
+}
+
+module "guest_instances" {
+  source = "./modules/instances"
+
+  name      = "${local.name}-guest"
+  vpc_id    = module.network.vpc_id
+  key_name  = aws_key_pair.key_pair.key_name
+  instances = local.guest_instances
 }
 
 module "vpn_instances" {
@@ -56,12 +56,17 @@ module "vpn_instances" {
   instances = [
     {
       name          = "wireguard_vpn"
-      ami           = "ami-0a0c8eebcdd6dcbd0" // Ubuntu
+      ami           = "ami-0a0c8eebcdd6dcbd0" // Ubuntu arm
       instance_type = "t4g.nano"
       subnet_id     = module.network.vpn_subnet_id
       private_ip    = "10.0.50.50"
       public_ip     = true
       ports = [
+        {
+          port        = -1
+          protocol    = "icmp"
+          cidr_blocks = ["0.0.0.0/0"]
+        },
         {
           port        = 22
           protocol    = "tcp"

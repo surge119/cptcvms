@@ -163,3 +163,15 @@ python3 main.py -t
 ```
 
 #### Launch
+
+There are also scripts for automating the deployment. In `deployment/network`, there is a terraform script, which will provision the resources necessary. There is also an ansible playbook in `deployment/ansible/vpn` which will automatically setup a wireguard vpn with users defined in `deployment/ansible/vpn/users.json`.
+
+```sh
+# Provision AWS Resources
+cd deployment/network
+terraform apply
+
+# Setup VPN
+cd deploymnet/network/ansible/vpn
+ansible-playbook -i inventory.ini playbook.yml
+```

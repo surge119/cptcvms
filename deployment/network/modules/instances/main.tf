@@ -8,8 +8,13 @@ resource "aws_instance" "instance" {
 
   associate_public_ip_address = var.instances[count.index].public_ip
   subnet_id                   = var.instances[count.index].subnet_id
-  vpc_security_group_ids      = [aws_security_group.ping.id, aws_security_group.security_group[count.index].id]
+  vpc_security_group_ids      = [aws_security_group.security_group[count.index].id]
   private_ip                  = var.instances[count.index].private_ip
+
+  root_block_device {
+    delete_on_termination = true
+    volume_type           = "gp3"
+  }
 
   tags = {
     Name = "${var.name}-${var.instances[count.index].name}"
@@ -44,23 +49,5 @@ resource "aws_security_group" "security_group" {
 
   tags = {
     Name = "${var.instances[count.index].name}-security_group"
-  }
-}
-
-resource "aws_security_group" "ping" {
-  name        = "${var.name}-icmp-security_group"
-  description = "The security group that allows pings (icmp)"
-
-  vpc_id = var.vpc_id
-
-  ingress {
-    from_port   = -1
-    to_port     = -1
-    protocol    = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "${var.name}-icmp-security_group"
   }
 }
