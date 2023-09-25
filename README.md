@@ -1,6 +1,6 @@
 # Overview
 
-Documentation and helper scripts for deploying the cptc 2023 finals VMs to AWS.
+Documentation and helper scripts for deploying the cptc8 (2022-2023) finals VMs to AWS.
 
 ## Usage
 
