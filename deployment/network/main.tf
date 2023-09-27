@@ -61,6 +61,7 @@ module "vpn_instances" {
       subnet_id     = module.network.vpn_subnet_id
       private_ip    = "10.0.50.50"
       public_ip     = true
+      volume_size   = 10
       ports = [
         {
           port        = -1
@@ -85,32 +86,18 @@ module "vpn_instances" {
 module "infra_instances" {
   source = "./modules/instances"
 
-  name     = local.name
+  name     = "${local.name}-infra"
   vpc_id   = module.network.vpc_id
   key_name = aws_key_pair.key_pair.key_name
   instances = [
     {
-      name          = "dns"
-      ami           = "ami-0a0c8eebcdd6dcbd0" // Ubuntu arm
-      instance_type = "t4g.nano"
-      subnet_id     = module.network.infra_subnet_id
-      private_ip    = "10.0.69.5"
-      public_ip     = true
-      ports = [
-        {
-          port        = 0
-          protocol    = "-1"
-          cidr_blocks = ["0.0.0.0/0"]
-        },
-      ]
-    },
-    {
       name          = "scorestack"
-      ami           = "ami-0a0c8eebcdd6dcbd0" // Ubuntu arm
-      instance_type = "t4g.small"
+      ami           = "ami-053b0d53c279acc90" // Ubuntu x86
+      instance_type = "t3a.xlarge"
       subnet_id     = module.network.infra_subnet_id
       private_ip    = "10.0.69.100"
-      public_ip     = false
+      public_ip     = true
+      volume_size   = 20
       ports = [
         {
           port        = 0
@@ -122,7 +109,16 @@ module "infra_instances" {
   ]
 }
 
-resource "local_file" "tf_ansible_vars" {
+resource "local_file" "tf_ansible_scorestack_inventory" {
+  content = <<-DOC
+    [scorestack]
+    ${module.infra_instances.instances[0].ip}
+    DOC
+
+  filename = "../ansible/scorestack/inventory.ini"
+}
+
+resource "local_file" "tf_ansible_vpn_vars" {
   content = <<-DOC
     tf_vpn_server_ip: ${module.vpn_instances.instances[0].ip}
     DOC
@@ -130,7 +126,7 @@ resource "local_file" "tf_ansible_vars" {
   filename = "./tf_ansible_vars.yml"
 }
 
-resource "local_file" "tf_ansible_inventory" {
+resource "local_file" "tf_ansible_vpn_inventory" {
   content = <<-DOC
     [vpn]
     ${module.vpn_instances.instances[0].ip}

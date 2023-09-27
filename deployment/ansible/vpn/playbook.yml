@@ -76,7 +76,7 @@
     - name: Generate Configs
       ansible.builtin.template:
         src: ./conf/client.conf
-        dest: "{{ base_dir }}/{{ item.name }}/client.conf"
+        dest: "{{ base_dir }}/{{ item.name }}/{{ item.name }}.conf"
       loop: "{{ users }}"
       vars:
         client_privatekey: "{{ item.private_key }}"

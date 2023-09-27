@@ -1,0 +1,79 @@
+---
+- name: Scorestack Deployment
+  hosts: scorestack
+  vars:
+    ansible_ssh_private_key_file: ../../network/key.pem
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+  remote_user: ubuntu
+  become: yes
+
+  tasks:
+    - name: Install unzip
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg:
+          - unzip
+
+    - name: Download Docker Installation Script
+      ansible.builtin.get_url:
+        url: https://get.docker.com
+        dest: /opt/docker.sh
+        mode: "0777"
+
+    - name: Install Docker
+      ansible.builtin.command: /opt/docker.sh
+
+    - name: Clone Scorestack
+      ansible.builtin.git:
+        repo: https://github.com/scorestack/scorestack.git
+        version: v0.8.2
+        dest: /opt/scorestack
+
+    - name: Create Dynamicbeat Directory
+      ansible.builtin.command: mkdir -p /opt/dynamicbeat
+
+    - name: Download Dynamicbeat
+      ansible.builtin.command: curl -L https://github.com/scorestack/scorestack/releases/download/v0.8.2/dynamicbeat-v0.8.2.zip -o /opt/dynamicbeat/dynamicbeat.zip
+
+    - name: Unzip Dynamicbeat
+      ansible.builtin.command: unzip dynamicbeat.zip
+      args:
+        chdir: /opt/dynamicbeat
+
+    - name: Update Sysctl mmap count
+      ansible.builtin.command: sysctl -w vm.max_map_count=262144
+
+    - name: Update ICMP Permission
+      ansible.builtin.command: sysctl -w net.ipv4.ping_group_range="0   2147483647"
+
+    - name: Copy Dynamicbeat Systemd Service
+      ansible.builtin.copy:
+        src: ./conf/dynamicbeat.service
+        dest: /etc/systemd/system/dynamicbeat.service
+
+    - name: Copy Dynamicbeat Config
+      ansible.builtin.copy:
+        src: ./conf/dynamicbeat.yml
+        dest: /opt/dynamicbeat/dynamicbeat.yml
+
+    - name: Copy Dynamicbeat Checks
+      ansible.builtin.copy:
+        src: ./checks/
+        dest: /opt/dynamicbeat/checks/
+
+    - name: Start Scorestack
+      ansible.builtin.command: docker compose -f /opt/scorestack/deployment/small/docker/docker-compose.yml up -d
+      become: yes
+
+    - name: Setup Dynamicbeat
+      ansible.builtin.command: /opt/dynamicbeat/dynamicbeat setup --config /opt/dynamicbeat/dynamicbeat.yml
+
+    - name: Setup Dynamicbeat Checks
+      ansible.builtin.command: /opt/dynamicbeat/dynamicbeat setup checks /opt/dynamicbeat/checks/
+
+    - name: Reload, Enable, and Start Dynamicbeat Systemd
+      ansible.builtin.systemd:
+        daemon_reload: true
+        enabled: true
+        state: started
+        name: dynamicbeat.service

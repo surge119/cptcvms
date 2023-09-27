@@ -1,0 +1,38 @@
+round_time: 15s
+
+# The credentials to use for authentication to Elasticsearch when running
+# checks with Dynamicbeat. This user must have the `dynamicbeat` role.
+#username: dynamicbeat
+#password: changeme
+
+### Logging ###################################################################
+
+log:
+  # Whether to include timestamps and code locations in each log line.
+  #verbose: false
+
+  # The lowest log level to print. -1 is DEBUG, 0 is INFO, 1 is WARN, etc.
+  #level: 0
+
+  # Whether to colorize the log output. By default, logs will be printed with
+  # color.
+  #no_color: false
+
+### Setup #####################################################################
+# The remaining settings are only used by Dynamicbeat's `setup` command and the
+# subcommands of `setup`. If this Dynamicbeat deployment will only use the
+# `run` command, then you can leave these settings as is.
+
+setup:
+  # The address to the Kibana endpoint of your Scorestack instance that will be
+  # configured by Dynamicbeat.
+  #kibana: https://localhost:9200
+
+  # The credentials to use for authentication to Elasticsearch and Kibana when
+  # running cluster setup. This user must have the `superuser` role.
+  #username: elastic
+  #password: changeme
+teams:
+  - name: monitor1
+    overides:
+      DefaultPassword: monitor1

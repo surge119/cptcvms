@@ -30,6 +30,7 @@ locals {
       subnet_id     = module.network.guest_subnet_id
       private_ip    = vm.private_ip
       public_ip     = false
+      volume_size   = 50
       ports = [
         {
           port        = 0

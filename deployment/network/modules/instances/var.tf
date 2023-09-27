@@ -18,6 +18,7 @@ variable "instances" {
     subnet_id     = string
     private_ip    = string
     public_ip     = bool
+    volume_size   = number
     ports = list(object({
       port        = number
       protocol    = string

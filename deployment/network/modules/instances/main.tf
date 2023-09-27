@@ -11,13 +11,10 @@ resource "aws_instance" "instance" {
   vpc_security_group_ids      = [aws_security_group.security_group[count.index].id]
   private_ip                  = var.instances[count.index].private_ip
 
-  private_dns_name_options {
-    enable_resource_name_dns_a_record = true
-  }
-
   root_block_device {
     delete_on_termination = true
     volume_type           = "gp3"
+    volume_size           = var.instances[count.index].volume_size
   }
 
   tags = {
