@@ -1,4 +1,11 @@
 ---
+- name: Setup Users Config
+  hosts: localhost
+
+  tasks:
+    - name: Run User Generator
+      ansible.builtin.command: python3 ./user_gen.py
+
 - name: Setup Wireguard VPN
   hosts: vpn
   vars:

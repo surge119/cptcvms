@@ -1,4 +1,16 @@
 ---
+- name: Create Scorestack Checks
+  hosts: localhost
+
+  tasks:
+    - name: Run Check Creator
+      ansible.builtin.command: python3 ./checks.py
+      args:
+        chdir: ./checks/
+
+    - name: Compress Checks
+      ansible.builtin.command: zip -r ./checks.zip ./checks/
+
 - name: Scorestack Deployment
   hosts: scorestack
   vars:
@@ -58,8 +70,13 @@
 
     - name: Copy Dynamicbeat Checks
       ansible.builtin.copy:
-        src: ./checks/
-        dest: /opt/dynamicbeat/checks/
+        src: ./checks.zip
+        dest: /opt/dynamicbeat/checks.zip
+
+    - name: Extract Dynamicbeat Checks
+      ansible.builtin.command: unzip ./checks.zip
+      args:
+        chdir: /opt/dynamicbeat/
 
     - name: Start Scorestack
       ansible.builtin.command: docker compose -f /opt/scorestack/deployment/small/docker/docker-compose.yml up -d
