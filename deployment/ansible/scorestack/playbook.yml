@@ -69,7 +69,9 @@
       ansible.builtin.command: /opt/dynamicbeat/dynamicbeat setup --config /opt/dynamicbeat/dynamicbeat.yml
 
     - name: Setup Dynamicbeat Checks
-      ansible.builtin.command: /opt/dynamicbeat/dynamicbeat setup checks /opt/dynamicbeat/checks/
+      ansible.builtin.command: ./dynamicbeat setup checks ./checks/
+      args:
+        chdir: /opt/dynamicbeat/
 
     - name: Reload, Enable, and Start Dynamicbeat Systemd
       ansible.builtin.systemd:

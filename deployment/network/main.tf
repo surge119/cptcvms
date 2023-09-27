@@ -93,7 +93,7 @@ module "infra_instances" {
     {
       name          = "scorestack"
       ami           = "ami-053b0d53c279acc90" // Ubuntu x86
-      instance_type = "t3a.xlarge"
+      instance_type = "t3a.medium"
       subnet_id     = module.network.infra_subnet_id
       private_ip    = "10.0.69.100"
       public_ip     = true
