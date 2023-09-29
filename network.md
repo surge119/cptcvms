@@ -22,7 +22,7 @@ This network contains the CPTC8 (2022-2023) vms with additional support machines
 | doapi         | 10.0.0.7   | Do API                               | t3.medium    | doapi.corp.cc         |
 | hms           | 10.0.0.11  | Hotel Management System              | t3.medium    | hms.corp.cc           |
 | ldap          | 10.0.0.100 | LDAP Authentication for AD           | t3.medium    | ldap.corp.cc          |
-| lps           | 10.0.0.12  | ?                                    | t3.medium    | lps.corp.cc           |
+| lps           | 10.0.0.12  | Rewards                              | t3.medium    | lps.corp.cc           |
 | media         | 10.0.0.20  | Media Server (Jellyfin)              | t3.medium    | media.corp.cc         |
 | payment-db    | 10.0.0.210 | Payment Database                     | t3.medium    | payment-db.corp.cc    |
 | payment-web   | 10.0.0.200 | Payment Web Portal                   | t3.medium    | payment-web.corp.cc   |

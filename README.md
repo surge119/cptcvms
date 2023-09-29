@@ -2,6 +2,14 @@
 
 Documentation and helper scripts for deploying the cptc8 (2022-2023) finals VMs to AWS.
 
+## Quick Usage
+
+#### Setup
+
+```sh
+pip install pywinrm
+```
+
 ## Usage
 
 The following are the credentials
@@ -174,4 +182,12 @@ terraform apply
 # Setup VPN
 cd deploymnet/network/ansible/vpn
 ansible-playbook -i inventory.ini playbook.yml
+```
+
+## Rearming Windows
+
+The windows machines are using evaluation licenses, which will need to rearmed when they expire
+
+```
+slmgr -dli
 ```

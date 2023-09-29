@@ -172,10 +172,10 @@ def create_checks():
                 .host(target["ip"])
                 .score_weight(1)
                 .type(target["os"])
-                .username("scorestack")
-                .password("scorestack")
+                .username("infra")
+                .password("infra")
                 .command("id")
-                .regex("scorestack")
+                .regex("infra")
                 .serialize()
             )
             with open(f"{net}-{target['name']}-remote.json", "w") as f:
