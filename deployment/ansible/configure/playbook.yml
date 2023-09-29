@@ -27,14 +27,28 @@
         password: cptcInfra12!
         state: present
 
-    - name: Add Infra User to groups
-      ansible.windows.win_powershell:
-        script: |
-          Add-ADGroupMember -Identity {{ item }} -Members infra
-      loop: "{{ infra_groups.split(',') }}"
-
     - name: Rearm Windows License
       ansible.builtin.win_shell: cscript C:\Windows\System32\slmgr.vbs -rearm
 
     - name: Reboot
       ansible.windows.win_reboot:
+
+- name: Add Windows Non-DC Usersto Group
+  hosts: corp_windows, guest_windows
+
+  tasks:
+    - name: Add users to group
+      ansible.windows.win_group_membership:
+        name: Administrators
+        members:
+          - infra
+
+- name: Add Windows DC User to Group
+  hosts: corp_dc
+
+  tasks:
+    - name: Add Infra User to groups
+      ansible.windows.win_powershell:
+        script: |
+          Add-ADGroupMember -Identity {{ item }} -Members infra
+      loop: "{{ infra_groups.split(',') }}"
