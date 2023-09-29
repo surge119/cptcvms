@@ -83,6 +83,32 @@ module "vpn_instances" {
   ]
 }
 
+module "blue_instances" {
+  source = "./modules/instances"
+
+  name     = "${local.name}-blue"
+  vpc_id   = module.network.vpc_id
+  key_name = aws_key_pair.key_pair.key_name
+  instances = [
+    {
+      name          = "wazuh"
+      ami           = "ami-053b0d53c279acc90" // Ubuntu x86
+      instance_type = "t3a.medium"
+      subnet_id     = module.network.blue_subnet_id
+      private_ip    = "10.0.100.100"
+      public_ip     = true
+      volume_size   = 50
+      ports = [
+        {
+          port        = 0
+          protocol    = "-1"
+          cidr_blocks = ["10.0.0.0/16"]
+        },
+      ]
+    }
+  ]
+}
+
 module "infra_instances" {
   source = "./modules/instances"
 

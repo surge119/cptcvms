@@ -17,44 +17,8 @@
           - admin
         shell: /bin/bash
 
-- name: Windows Corporate Setup
-  hosts: corp_windows
-  remote_user: Administrator
-  vars:
-    ansible_password: cptcadminA1!
-    ansible_connection: winrm
-    ansible_winrm_transport: basic
-    ansible_winrm_server_cert_validation: ignore
-
-  tasks:
-    - name: Create Infra User
-      ansible.windows.win_user:
-        name: infra
-        password: cptcInfra12!
-        state: present
-        groups: []
-
-    - name: Add Infra User to Administrator group
-      ansible.windows.win_group_membership:
-        name: Administrators
-        members:
-          - infra
-        state: present
-
-    # - name: Rearm Windows License
-    #   ansible.builtin.win_shell: cscript C:\Windows\System32\slmgr.vbs -rearm
-
-    # - name: Reboot
-    #   ansible.windows.win_reboot:
-
-- name: Windows Guest Setup
-  hosts: guest_windows
-  remote_user: Administrator
-  vars:
-    ansible_password: ""
-    ansible_connection: winrm
-    ansible_winrm_transport: basic
-    ansible_winrm_server_cert_validation: ignore
+- name: Create Windows User
+  hosts: corp_dc, corp_windows, guest_windows
 
   tasks:
     - name: Create Infra User
@@ -63,12 +27,11 @@
         password: cptcInfra12!
         state: present
 
-    - name: Add Infra User to Administrator group
-      ansible.windows.win_group_membership:
-        name: Administrators
-        members:
-          - infra
-        state: present
+    - name: Add Infra User to groups
+      ansible.windows.win_powershell:
+        script: |
+          Add-ADGroupMember -Identity {{ item }} -Members infra
+      loop: "{{ infra_groups.split(',') }}"
 
     - name: Rearm Windows License
       ansible.builtin.win_shell: cscript C:\Windows\System32\slmgr.vbs -rearm

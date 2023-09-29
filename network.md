@@ -49,7 +49,7 @@ This network contains the CPTC8 (2022-2023) vms with additional support machines
 
 | Machine Name | IP           | Purpose              | AWS Instance | Domain        |
 | ------------ | ------------ | -------------------- | ------------ | ------------- |
-| wazuh        | 10.0.100.100 | Wazuh Logging Server | t4a.medium   | wazuh.blue.cc |
+| wazuh        | 10.0.100.100 | Wazuh Logging Server | t3a.medium   | wazuh.blue.cc |
 
 #### Red (10.0.150.0/24)
 
