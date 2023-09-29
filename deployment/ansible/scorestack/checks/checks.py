@@ -88,23 +88,34 @@ class RemoteCheck(Check):
         return self
 
     def serialize(self) -> dict:
+        if self.type == "ssh":
+            defs = {
+                "Host": "{{.Host}}",
+                "Username": "{{.Username}}",
+                "Password": "{{.Password}}",
+                "Cmd": "whoami",
+                "MatchContent": "true",
+                "ContentRegex": "{{.Regex}}",
+            }
+        elif self.type == "winrm":
+            defs = {
+                "Host": "{{.Host}}",
+                "Username": "{{.Username}}",
+                "Password": "{{.Password}}",
+                "Cmd": "whoami",
+                "Encrypted": "false",
+                "Port": "5985",
+                "MatchContent": "true",
+                "ContentRegex": "{{.Regex}}",
+            }
+
         return (
-            self.definition(
-                {
-                    "Host": "{{.Host}}",
-                    "Username": "{{.Username}}",
-                    "Password": "{{.Password}}",
-                    "Cmd": "{{.Command}}",
-                    "MatchContent": "true",
-                    "ContentRegex": "{{.Regex}}",
-                }
-            )
+            self.definition(defs)
             .attributes(
                 {
                     "admin": {
                         "Host": self.host,
                         "Username": self.username,
-                        "Cmd": self.command,
                         "Regex": self.regex,
                     },
                     "user": {
@@ -173,7 +184,7 @@ def create_checks():
                 .score_weight(1)
                 .type(target["os"])
                 .username("infra")
-                .password("infra")
+                .password("cptcInfra12!")
                 .command("id")
                 .regex("infra")
                 .serialize()

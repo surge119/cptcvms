@@ -10,14 +10,14 @@
     - name: Add Scorestack User
       ansible.builtin.user:
         name: infra
-        # Password is `infra`
-        password: $6$balls$YFzAorVM1E0BvbNsYgkaAS2YZVxJ.Xa7N8y45N7Kjcu6ncd5WQVoRHqwn/6uQQObwMRwStu5PjPKuTQSdGY3h1
+        # Password is `cptcInfra12!`
+        password: $6$balls$kFnVcVsrkLZXbOTBYsNXlibkcwq2eRG68btPRgX6kW2xpGDY5V1v0TW4tSHJLpwERVmHX0MR07EAnnvjRI1g70
         groups:
           - root
           - admin
         shell: /bin/bash
 
-- name: Windows Setup
+- name: Windows Corporate Setup
   hosts: corp_windows
   remote_user: Administrator
   vars:
@@ -27,7 +27,51 @@
     ansible_winrm_server_cert_validation: ignore
 
   tasks:
-    - name: Test
-      ansible.windows.win_powershell:
-        script: |
-          slmgr -rearm
+    - name: Create Infra User
+      ansible.windows.win_user:
+        name: infra
+        password: cptcInfra12!
+        state: present
+        groups: []
+
+    - name: Add Infra User to Administrator group
+      ansible.windows.win_group_membership:
+        name: Administrators
+        members:
+          - infra
+        state: present
+
+    # - name: Rearm Windows License
+    #   ansible.builtin.win_shell: cscript C:\Windows\System32\slmgr.vbs -rearm
+
+    # - name: Reboot
+    #   ansible.windows.win_reboot:
+
+- name: Windows Guest Setup
+  hosts: guest_windows
+  remote_user: Administrator
+  vars:
+    ansible_password: ""
+    ansible_connection: winrm
+    ansible_winrm_transport: basic
+    ansible_winrm_server_cert_validation: ignore
+
+  tasks:
+    - name: Create Infra User
+      ansible.windows.win_user:
+        name: infra
+        password: cptcInfra12!
+        state: present
+
+    - name: Add Infra User to Administrator group
+      ansible.windows.win_group_membership:
+        name: Administrators
+        members:
+          - infra
+        state: present
+
+    - name: Rearm Windows License
+      ansible.builtin.win_shell: cscript C:\Windows\System32\slmgr.vbs -rearm
+
+    - name: Reboot
+      ansible.windows.win_reboot:

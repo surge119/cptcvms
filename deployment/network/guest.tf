@@ -26,7 +26,7 @@ locals {
     {
       name          = vm.name
       ami           = vm.ami
-      instance_type = local.cptc8_instance
+      instance_type = local.cptc8_instance_light
       subnet_id     = module.network.guest_subnet_id
       private_ip    = vm.private_ip
       public_ip     = false

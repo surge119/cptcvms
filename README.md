@@ -6,7 +6,11 @@ Documentation and helper scripts for deploying the cptc8 (2022-2023) finals VMs 
 
 #### Setup
 
+Dependencies
+
 ```sh
+sudo apt install sshpass
+
 pip install pywinrm
 ```
 
@@ -57,7 +61,10 @@ qemu-img convert -O qcow2 2023-finals-team-01-payment-web-a8fb8224.vmdk cptc-pay
 
    - `File` -> `New Virtual Machine` -> `Import existing disk image` -> Select `cptc-payment-web.qcow2` ...
 
-3. Start the VM and immediately hold `ESC` to enter the `GRUB` menu
+3. Start the VM and immediately hold `ESC` to ent
+
+```
+er the `GRUB` menu
 
 4. When hovering over the first entry, press `e` then scroll to the line that starts with `linux`.
 
@@ -77,9 +84,7 @@ This requires a Windows PE usb stick.
 - Select `USB Host Device` -> choose your WinPE usb -> `Finish`
 - Select `Boot Options` -> enable your usb device and move it to the top
 - Select `Enable boot menu` with `Boot Options`
-- Finish setting up the VM
-
-2. Start the VM and boot into WinPE
+```
 
 Use the following commands
 
