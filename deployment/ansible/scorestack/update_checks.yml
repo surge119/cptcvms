@@ -1,0 +1,28 @@
+---
+- name: Create Scorestack Checks
+  hosts: localhost
+
+  tasks:
+    - name: Run Check Creator
+      ansible.builtin.command: python3 ./checks.py
+      args:
+        chdir: ./checks/
+
+- name: Update Scorestack Checks
+  hosts: scorestack
+  vars:
+    ansible_ssh_private_key_file: ../../network/key.pem
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+  remote_user: ubuntu
+  become: yes
+
+  tasks:
+    - name: Copy Dynamicbeat Checks
+      ansible.builtin.copy:
+        src: ./checks/
+        dest: /opt/dynamicbeat/checks/
+
+    - name: Setup Dynamicbeat Checks
+      ansible.builtin.command: ./dynamicbeat setup checks ./checks/
+      args:
+        chdir: /opt/dynamicbeat/
