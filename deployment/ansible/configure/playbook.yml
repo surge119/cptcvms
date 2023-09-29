@@ -37,7 +37,7 @@
   hosts: corp_windows, guest_windows
 
   tasks:
-    - name: Add users to group
+    - name: Add Infra User to groups
       ansible.windows.win_group_membership:
         name: Administrators
         members:
