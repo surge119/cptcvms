@@ -6,7 +6,7 @@ Documentation and helper scripts for deploying the cptc8 (2022-2023) finals VMs 
 
 #### Setup
 
-Dependencies
+1. Dependencies (additional dependencies may be missing)
 
 ```sh
 sudo snap install terraform --classic
@@ -14,6 +14,47 @@ sudo snap install terraform --classic
 sudo apt install -y python3-pip sshpass
 
 pip install ansible pywinrm
+```
+
+2. Provision Network
+
+- This step is required and must complete before moving on
+
+```sh
+cd deployment/network
+terraform init
+terraform apply
+```
+
+3. Setup VPN
+
+- Wireguard is used to access the network. More information can be found in `deployment/ansible/vpn`
+
+```sh
+cd deployment/ansible/vpn
+ansible-playbook -i inventory.ini playbook.yml
+```
+
+4. Setup Scorestack
+
+- This is optional. Scorestack is used to test functionality and reachability of services/vms
+- Some checks are dependent on the `Configure` step, but the scorestack setup itself is independent
+
+```sh
+cd deployment/ansible/scorestack
+ansible-playbook -i inventory.ini playbook.yml
+```
+
+5. Configure
+
+- This step is optional but recommended. It creates a `infra` user with Admin privs for administering the network
+- `infra` users is also used by scorestack
+- This step will rearm evaluation licenses of the windows machines
+- This step requires connection to the VPN
+
+```sh
+cd deployment/ansible/configure
+ansible-playbook -i inventory.ini playbook.yml
 ```
 
 ## Usage
@@ -179,17 +220,7 @@ python3 main.py -t
 
 #### Launch
 
-There are also scripts for automating the deployment. In `deployment/network`, there is a terraform script, which will provision the resources necessary. There is also an ansible playbook in `deployment/ansible/vpn` which will automatically setup a wireguard vpn with users defined in `deployment/ansible/vpn/users.json`.
-
-```sh
-# Provision AWS Resources
-cd deployment/network
-terraform apply
-
-# Setup VPN
-cd deploymnet/network/ansible/vpn
-ansible-playbook -i inventory.ini playbook.yml
-```
+Follow the quick usage setup steps above.
 
 ## Rearming Windows
 
