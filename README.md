@@ -19,6 +19,9 @@ pip install ansible pywinrm
 2. Provision Network
 
 - This step is required and must complete before moving on
+- The `locals.ami_ownsers` local in `deployment/network/var.tf` may need to be updated if
+  - You want to use amis you created
+  - The AMIs I created are no longer public
 
 ```sh
 cd deployment/network
