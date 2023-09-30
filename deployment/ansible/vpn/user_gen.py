@@ -3,7 +3,7 @@ import json
 
 infra_count = 1
 blue_count = 10
-red_count = 10
+red_count = 30
 
 
 [
