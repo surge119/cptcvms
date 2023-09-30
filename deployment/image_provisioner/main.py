@@ -1,5 +1,4 @@
 import argparse
-import configparser
 import json
 import threading
 
@@ -122,18 +121,42 @@ def import_image_status(client, ids):
     return res
 
 
-def tag_images(client, data, statuses):
+def get_amis(data, statuses):
+    amis = dict()
     for vm in data:
         for status in statuses["ImportImageTasks"]:
             if status["ImportTaskId"] == data[vm]:
-                res = client.create_tags(
-                    Resources=[
-                        status["ImageId"],
-                    ],
-                    Tags=[
-                        {"Key": "Name", "Value": f"cptc8-{vm}"},
-                    ],
-                )
+                amis[vm] = status["ImageId"]
+    return amis
+
+
+def tag_images(client, data, statuses):
+    amis = get_amis(data, statuses)
+    for vm in vms:
+        res = client.create_tags(
+            Resources=[
+                amis[vm],
+            ],
+            Tags=[
+                {"Key": "Name", "Value": f"cptc8-{vm}"},
+            ],
+        )
+
+
+def publish_images(client, data, statuses):
+    amis = get_amis(data, statuses)
+    for vm in vms:
+        response = client.modify_image_attribute(
+            Attribute="launchPermission",
+            ImageId=amis[vm],
+            LaunchPermission={
+                "Add": [
+                    {
+                        "Group": "all",
+                    },
+                ],
+            },
+        )
 
 
 if __name__ == "__main__":
@@ -142,6 +165,7 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--import-image", action="store_true")
     parser.add_argument("-s", "--status", action="store_true")
     parser.add_argument("-t", "--tag", action="store_true")
+    parser.add_argument("-p", "--publish", action="store_true")
 
     args = parser.parse_args()
 
@@ -182,3 +206,10 @@ if __name__ == "__main__":
             info = json.load(f)
             status_list = json.load(f1)
             tag_images(ec2_client, info, status_list)
+
+    if args.publish:
+        ec2_client = boto3.client("ec2")
+        with open("output.json", "r") as f, open("status.json", "r") as f1:
+            info = json.load(f)
+            status_list = json.load(f1)
+            publish_images(ec2_client, info, status_list)
