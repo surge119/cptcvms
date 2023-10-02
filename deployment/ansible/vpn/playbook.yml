@@ -117,3 +117,21 @@
     - name: Add User Configs
       ansible.builtin.command: "wg set server peer {{ item.public_key }} allowed-ips {{ item.ip }}"
       loop: "{{ hostvars['localhost']['users'] }}"
+
+- name: Zip Configs to Local CWD
+  hosts: localhost
+
+  tasks:
+    - name: Zip Red Configs
+      ansible.builtin.archive:
+        path:
+          - /tmp/rb_wg/red*
+        dest: ./red.zip
+        format: zip
+
+    - name: Zip Blue Configs
+      ansible.builtin.archive:
+        path:
+          - /tmp/rb_wg/blue*
+        dest: ./blue.zip
+        format: zip

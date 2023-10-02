@@ -8,6 +8,7 @@ locals {
     {
       name       = "dc01"
       ami        = data.aws_ami.cptc-corp-dc01.image_id
+      public_ip  = true
       private_ip = "10.0.0.5"
     },
     {

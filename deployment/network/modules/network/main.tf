@@ -38,7 +38,7 @@ resource "aws_subnet" "subnets" {
   cidr_block = each.value
 
   tags = {
-    Name = "${each.key}-${var.name}-subnet"
+    Name = "${var.name}-${each.key}-subnet"
   }
 }
 

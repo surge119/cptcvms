@@ -17,7 +17,7 @@
           - admin
         shell: /bin/bash
 
-- name: Create Windows User
+- name: Create Windows User & Rearm Windows License
   hosts: corp_dc, corp_windows, guest_windows
 
   tasks:
@@ -33,7 +33,7 @@
     - name: Reboot
       ansible.windows.win_reboot:
 
-- name: Add Windows Non-DC Usersto Group
+- name: Add Windows Non-DC Users to Group
   hosts: corp_windows, guest_windows
 
   tasks:
