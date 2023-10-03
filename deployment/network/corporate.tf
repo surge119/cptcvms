@@ -70,7 +70,7 @@ locals {
       instance_type = local.cptc8_instance
       subnet_id     = module.network.corporate_subnet_id
       private_ip    = vm.private_ip
-      public_ip     = false
+      public_ip     = true
       volume_size   = 50
       ports = [
         {
