@@ -19,6 +19,8 @@
 
 - name: Create Windows User, Update DNS, & Rearm Windows License
   hosts: corp_dc, corp_windows, guest_windows
+  vars:
+    dns_interface: 2
 
   tasks:
     - name: Create Infra User
@@ -28,11 +30,15 @@
         state: present
 
     - name: Get DNS Interface
-      ansible.windows.win_powershell: Get-DnsClientServerAddress -InterfaceAlias ("Ethernet 2") | select -ExpandProperty Name -first 1
-      register: dns_addr
+      ansible.windows.win_powershell:
+        script: |
+          Get-DnsClientServerAddress -InterfaceAlias ("Ethernet 2") | select -ExpandProperty Name -first 1
+      register: dns_interface
 
     - name: Update DNS
-      ansible.windows.win_powershell: Set-DnsClientServerAddress -InterfaceIndex {{ dns_addr }} -ServerAddresses ("10.0.0.5", "10.0.0.2")
+      ansible.windows.win_powershell:
+        script: |
+          Set-DnsClientServerAddress -InterfaceIndex {{ dns_interface.output[0] }} -ServerAddresses ("10.0.0.5", "10.0.0.2")
 
     - name: Rearm Windows License
       ansible.builtin.win_shell: cscript C:\Windows\System32\slmgr.vbs -rearm
