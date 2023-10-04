@@ -68,7 +68,7 @@ locals {
       name          = vm.name
       ami           = vm.ami
       instance_type = local.cptc8_instance
-      subnet_id     = module.network.corporate_subnet_id
+      subnet_id     = aws_subnet.subnets["corporate"].id
       private_ip    = vm.private_ip
       public_ip     = true
       volume_size   = 50

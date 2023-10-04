@@ -27,6 +27,11 @@ pip install ansible pywinrm
 cd deployment/network
 terraform init
 terraform apply
+
+# This is required if you want to be able to
+# connect to the vpn clients from the internal
+# AWS network (reverse shell, etc)
+python3 update_rt.py
 ```
 
 3. Setup VPN
