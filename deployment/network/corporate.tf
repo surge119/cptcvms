@@ -86,12 +86,6 @@ locals {
 data "aws_ami" "cptc-corp-adcs" {
   most_recent = true
   owners      = local.ami_owners
-
-  filter {
-    name   = "is-public"
-    values = ["true"]
-  }
-
   filter {
     name   = "tag:Name"
     values = ["cptc8-adcs"]
@@ -101,12 +95,6 @@ data "aws_ami" "cptc-corp-adcs" {
 data "aws_ami" "cptc-corp-dc01" {
   most_recent = true
   owners      = local.ami_owners
-
-  filter {
-    name   = "is-public"
-    values = ["true"]
-  }
-
   filter {
     name   = "tag:Name"
     values = ["cptc8-dc01"]
@@ -116,12 +104,6 @@ data "aws_ami" "cptc-corp-dc01" {
 data "aws_ami" "cptc-corp-doapi" {
   most_recent = true
   owners      = local.ami_owners
-
-  filter {
-    name   = "is-public"
-    values = ["true"]
-  }
-
   filter {
     name   = "tag:Name"
     values = ["cptc8-doapi"]
@@ -131,12 +113,6 @@ data "aws_ami" "cptc-corp-doapi" {
 data "aws_ami" "cptc-corp-hms" {
   most_recent = true
   owners      = local.ami_owners
-
-  filter {
-    name   = "is-public"
-    values = ["true"]
-  }
-
   filter {
     name   = "tag:Name"
     values = ["cptc8-hms"]
@@ -146,12 +122,6 @@ data "aws_ami" "cptc-corp-hms" {
 data "aws_ami" "cptc-corp-ldap" {
   most_recent = true
   owners      = local.ami_owners
-
-  filter {
-    name   = "is-public"
-    values = ["true"]
-  }
-
   filter {
     name   = "tag:Name"
     values = ["cptc8-ldap"]
@@ -161,12 +131,6 @@ data "aws_ami" "cptc-corp-ldap" {
 data "aws_ami" "cptc-corp-lps" {
   most_recent = true
   owners      = local.ami_owners
-
-  filter {
-    name   = "is-public"
-    values = ["true"]
-  }
-
   filter {
     name   = "tag:Name"
     values = ["cptc8-lps"]
@@ -176,12 +140,6 @@ data "aws_ami" "cptc-corp-lps" {
 data "aws_ami" "cptc-corp-media" {
   most_recent = true
   owners      = local.ami_owners
-
-  filter {
-    name   = "is-public"
-    values = ["true"]
-  }
-
   filter {
     name   = "tag:Name"
     values = ["cptc8-media"]
@@ -191,12 +149,6 @@ data "aws_ami" "cptc-corp-media" {
 data "aws_ami" "cptc-corp-payment-db" {
   most_recent = true
   owners      = local.ami_owners
-
-  filter {
-    name   = "is-public"
-    values = ["true"]
-  }
-
   filter {
     name   = "tag:Name"
     values = ["cptc8-payment-db"]
@@ -206,12 +158,6 @@ data "aws_ami" "cptc-corp-payment-db" {
 data "aws_ami" "cptc-corp-payment-web" {
   most_recent = true
   owners      = local.ami_owners
-
-  filter {
-    name   = "is-public"
-    values = ["true"]
-  }
-
   filter {
     name   = "tag:Name"
     values = ["cptc8-payment-web"]
@@ -221,12 +167,6 @@ data "aws_ami" "cptc-corp-payment-web" {
 data "aws_ami" "cptc-corp-profiler" {
   most_recent = true
   owners      = local.ami_owners
-
-  filter {
-    name   = "is-public"
-    values = ["true"]
-  }
-
   filter {
     name   = "tag:Name"
     values = ["cptc8-profiler"]
@@ -236,12 +176,6 @@ data "aws_ami" "cptc-corp-profiler" {
 data "aws_ami" "cptc-corp-workstation01" {
   most_recent = true
   owners      = local.ami_owners
-
-  filter {
-    name   = "is-public"
-    values = ["true"]
-  }
-
   filter {
     name   = "tag:Name"
     values = ["cptc8-workstation01"]
@@ -251,12 +185,6 @@ data "aws_ami" "cptc-corp-workstation01" {
 data "aws_ami" "cptc-corp-workstation02" {
   most_recent = true
   owners      = local.ami_owners
-
-  filter {
-    name   = "is-public"
-    values = ["true"]
-  }
-
   filter {
     name   = "tag:Name"
     values = ["cptc8-workstation02"]
