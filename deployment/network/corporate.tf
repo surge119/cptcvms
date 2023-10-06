@@ -2,38 +2,38 @@ locals {
   corporate_vms = [
     {
       name = "adcs"
-      ami  = data.aws_ami.cptc-corp-adcs.image_id
+      ami  = data.aws_ami.cptc-corp-adcs.id
       id   = "10.0.0.6"
     },
     {
       name       = "dc01"
-      ami        = data.aws_ami.cptc-corp-dc01.image_id
+      ami        = data.aws_ami.cptc-corp-dc01.id
       id         = true
       private_ip = "10.0.0.5"
     },
     {
       name = "doapi"
-      ami  = data.aws_ami.cptc-corp-doapi.image_id
+      ami  = data.aws_ami.cptc-corp-doapi.id
       id   = "10.0.0.7"
     },
     {
       name = "hms"
-      ami  = data.aws_ami.cptc-corp-hms.image_id
+      ami  = data.aws_ami.cptc-corp-hms.id
       id   = "10.0.0.11"
     },
     {
       name = "ldap"
-      ami  = data.aws_ami.cptc-corp-ldap.image_id
+      ami  = data.aws_ami.cptc-corp-ldap.id
       id   = "10.0.0.100"
     },
     {
       name = "lps"
-      ami  = data.aws_ami.cptc-corp-lps.image_id
+      ami  = data.aws_ami.cptc-corp-lps.id
       id   = "10.0.0.12"
     },
     {
       name = "media"
-      ami  = data.aws_ami.cptc-corp-media.image_id
+      ami  = data.aws_ami.cptc-corp-media.id
       id   = "10.0.0.20"
     },
     {
@@ -48,17 +48,17 @@ locals {
     },
     {
       name = "profiler"
-      ami  = data.aws_ami.cptc-corp-profiler.image_id
+      ami  = data.aws_ami.cptc-corp-profiler.id
       id   = "10.0.0.102"
     },
     {
       name = "workstation01"
-      ami  = data.aws_ami.cptc-corp-workstation01.image_id
+      ami  = data.aws_ami.cptc-corp-workstation01.id
       id   = "10.0.0.51"
     },
     {
       name = "workstation02"
-      ami  = data.aws_ami.cptc-corp-workstation02.image_id
+      ami  = data.aws_ami.cptc-corp-workstation02.id
       id   = "10.0.0.52"
     }
   ]
@@ -86,71 +86,107 @@ locals {
 data "aws_ami" "cptc-corp-adcs" {
   most_recent = true
   owners      = local.ami_owners
-  image_id    = "ami-0afd33cfe9c8e0d66"
+  filter {
+    name   = "Name"
+    values = ["import-ami-0cbfcc5f36f2cd85c"]
+  }
 }
 
 data "aws_ami" "cptc-corp-dc01" {
   most_recent = true
   owners      = local.ami_owners
-  image_id    = "ami-07b4273f227541bff"
+  filter {
+    name   = "Name"
+    values = ["import-ami-00d057fec5a8e931f"]
+  }
 }
 
 data "aws_ami" "cptc-corp-doapi" {
   most_recent = true
   owners      = local.ami_owners
-  image_id    = "ami-048984f8389164a46"
+  filter {
+    name   = "Name"
+    values = ["import-ami-02c5eea4a49fdc04c"]
+  }
 }
 
 data "aws_ami" "cptc-corp-hms" {
   most_recent = true
   owners      = local.ami_owners
-  image_id    = "ami-0647b402e25fb70f8"
+  filter {
+    name   = "Name"
+    values = ["import-ami-05d7d55c3c16543e6"]
+  }
 }
 
 data "aws_ami" "cptc-corp-ldap" {
   most_recent = true
   owners      = local.ami_owners
-  image_id    = "ami-0c19ed51243876940"
+  filter {
+    name   = "Name"
+    values = ["import-ami-06293b32f70c0b7bb"]
+  }
 }
 
 data "aws_ami" "cptc-corp-lps" {
   most_recent = true
   owners      = local.ami_owners
-  image_id    = "ami-0eedc80277d2ebed7"
+  filter {
+    name   = "Name"
+    values = ["import-ami-0a9000656f5d014c3"]
+  }
 }
 
 data "aws_ami" "cptc-corp-media" {
   most_recent = true
   owners      = local.ami_owners
-  image_id    = "ami-0b82130d627462610"
+  filter {
+    name   = "Name"
+    values = ["import-ami-0570a4e7eee09a453"]
+  }
 }
 
 data "aws_ami" "cptc-corp-payment-db" {
   most_recent = true
   owners      = local.ami_owners
-  image_id    = "ami-066f4ab32f25eb25a"
+  filter {
+    name   = "Name"
+    values = ["import-ami-0a370690ea1daf062"]
+  }
 }
 
 data "aws_ami" "cptc-corp-payment-web" {
   most_recent = true
   owners      = local.ami_owners
-  image_id    = "ami-0abd54cb19c657249"
+  filter {
+    name   = "Name"
+    values = ["import-ami-02a533ae9f3cbb3e0"]
+  }
 }
 
 data "aws_ami" "cptc-corp-profiler" {
   most_recent = true
   owners      = local.ami_owners
-  image_id    = "ami-0d6ca849652e4ebf3"
+  filter {
+    name   = "Name"
+    values = ["import-ami-01ab6d294c050ea95"]
+  }
 }
 
 data "aws_ami" "cptc-corp-workstation01" {
   most_recent = true
   owners      = local.ami_owners
-  image_id    = "ami-09efdff5e7caf7139"
+  filter {
+    name   = "Name"
+    values = ["import-ami-0b00af9303f9caaf9"]
+  }
 }
 
 data "aws_ami" "cptc-corp-workstation02" {
   most_recent = true
   owners      = local.ami_owners
-  image_id    = "ami-026d4e538685ce775"
+  filter {
+    name   = "Name"
+    values = ["import-ami-0f376f13e147c70e3"]
+  }
 }
