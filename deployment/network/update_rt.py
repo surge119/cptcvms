@@ -6,7 +6,7 @@ INST_TAG = "cptc8-wireguard_vpn"
 
 
 def main():
-    client = boto3.client("ec2")
+    client = boto3.client("ec2", region_name="us-east-1")
 
     rt_res = client.describe_route_tables(
         Filters=[
