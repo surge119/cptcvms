@@ -86,107 +86,71 @@ locals {
 data "aws_ami" "cptc-corp-adcs" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-adcs"]
-  }
+  id          = "ami-0afd33cfe9c8e0d66"
 }
 
 data "aws_ami" "cptc-corp-dc01" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-dc01"]
-  }
+  id          = "ami-07b4273f227541bff"
 }
 
 data "aws_ami" "cptc-corp-doapi" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-doapi"]
-  }
+  id          = "ami-048984f8389164a46"
 }
 
 data "aws_ami" "cptc-corp-hms" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-hms"]
-  }
+  id          = "ami-0647b402e25fb70f8"
 }
 
 data "aws_ami" "cptc-corp-ldap" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-ldap"]
-  }
+  id          = "ami-0c19ed51243876940"
 }
 
 data "aws_ami" "cptc-corp-lps" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-lps"]
-  }
+  id          = "ami-0eedc80277d2ebed7"
 }
 
 data "aws_ami" "cptc-corp-media" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-media"]
-  }
+  id          = "ami-0b82130d627462610"
 }
 
 data "aws_ami" "cptc-corp-payment-db" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-payment-db"]
-  }
+  id          = "ami-066f4ab32f25eb25a"
 }
 
 data "aws_ami" "cptc-corp-payment-web" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-payment-web"]
-  }
+  id          = "ami-0abd54cb19c657249"
 }
 
 data "aws_ami" "cptc-corp-profiler" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-profiler"]
-  }
+  id          = "ami-0d6ca849652e4ebf3"
 }
 
 data "aws_ami" "cptc-corp-workstation01" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-workstation01"]
-  }
+  id          = "ami-09efdff5e7caf7139"
 }
 
 data "aws_ami" "cptc-corp-workstation02" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-workstation02"]
-  }
+  id          = "ami-026d4e538685ce775"
 }

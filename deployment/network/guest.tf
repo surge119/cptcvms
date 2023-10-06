@@ -45,35 +45,23 @@ locals {
 data "aws_ami" "cptc-corp-kiosk01" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-kiosk01"]
-  }
+  id          = "ami-096a2e1a6ec5012ba"
 }
 
 data "aws_ami" "cptc-corp-kiosk02" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-kiosk02"]
-  }
+  id          = "ami-028daabcea4a77fb0"
 }
 
 data "aws_ami" "cptc-corp-kiosk03" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-kiosk03"]
-  }
+  id          = "ami-03c6ed7ccfc973cab"
 }
 
 data "aws_ami" "cptc-corp-kiosk04" {
   most_recent = true
   owners      = local.ami_owners
-  filter {
-    name   = "tag:Name"
-    values = ["cptc8-kiosk04"]
-  }
+  id          = "ami-003c78bb7e40a15c1"
 }
