@@ -87,7 +87,7 @@ data "aws_ami" "cptc-corp-adcs" {
   most_recent = true
   owners      = local.ami_owners
   filter {
-    name   = "Name"
+    name   = "name"
     values = ["import-ami-0cbfcc5f36f2cd85c"]
   }
 }
@@ -96,7 +96,7 @@ data "aws_ami" "cptc-corp-dc01" {
   most_recent = true
   owners      = local.ami_owners
   filter {
-    name   = "Name"
+    name   = "name"
     values = ["import-ami-00d057fec5a8e931f"]
   }
 }
@@ -105,7 +105,7 @@ data "aws_ami" "cptc-corp-doapi" {
   most_recent = true
   owners      = local.ami_owners
   filter {
-    name   = "Name"
+    name   = "name"
     values = ["import-ami-02c5eea4a49fdc04c"]
   }
 }
@@ -114,7 +114,7 @@ data "aws_ami" "cptc-corp-hms" {
   most_recent = true
   owners      = local.ami_owners
   filter {
-    name   = "Name"
+    name   = "name"
     values = ["import-ami-05d7d55c3c16543e6"]
   }
 }
@@ -123,7 +123,7 @@ data "aws_ami" "cptc-corp-ldap" {
   most_recent = true
   owners      = local.ami_owners
   filter {
-    name   = "Name"
+    name   = "name"
     values = ["import-ami-06293b32f70c0b7bb"]
   }
 }
@@ -132,7 +132,7 @@ data "aws_ami" "cptc-corp-lps" {
   most_recent = true
   owners      = local.ami_owners
   filter {
-    name   = "Name"
+    name   = "name"
     values = ["import-ami-0a9000656f5d014c3"]
   }
 }
@@ -141,7 +141,7 @@ data "aws_ami" "cptc-corp-media" {
   most_recent = true
   owners      = local.ami_owners
   filter {
-    name   = "Name"
+    name   = "name"
     values = ["import-ami-0570a4e7eee09a453"]
   }
 }
@@ -150,7 +150,7 @@ data "aws_ami" "cptc-corp-payment-db" {
   most_recent = true
   owners      = local.ami_owners
   filter {
-    name   = "Name"
+    name   = "name"
     values = ["import-ami-0a370690ea1daf062"]
   }
 }
@@ -159,7 +159,7 @@ data "aws_ami" "cptc-corp-payment-web" {
   most_recent = true
   owners      = local.ami_owners
   filter {
-    name   = "Name"
+    name   = "name"
     values = ["import-ami-02a533ae9f3cbb3e0"]
   }
 }
@@ -168,7 +168,7 @@ data "aws_ami" "cptc-corp-profiler" {
   most_recent = true
   owners      = local.ami_owners
   filter {
-    name   = "Name"
+    name   = "name"
     values = ["import-ami-01ab6d294c050ea95"]
   }
 }
@@ -177,7 +177,7 @@ data "aws_ami" "cptc-corp-workstation01" {
   most_recent = true
   owners      = local.ami_owners
   filter {
-    name   = "Name"
+    name   = "name"
     values = ["import-ami-0b00af9303f9caaf9"]
   }
 }
@@ -186,7 +186,7 @@ data "aws_ami" "cptc-corp-workstation02" {
   most_recent = true
   owners      = local.ami_owners
   filter {
-    name   = "Name"
+    name   = "name"
     values = ["import-ami-0f376f13e147c70e3"]
   }
 }
