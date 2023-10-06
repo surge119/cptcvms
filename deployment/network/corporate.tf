@@ -1,65 +1,65 @@
 locals {
   corporate_vms = [
     {
-      name       = "adcs"
-      ami        = data.aws_ami.cptc-corp-adcs.image_id
-      private_ip = "10.0.0.6"
+      name = "adcs"
+      ami  = data.aws_ami.cptc-corp-adcs.image_id
+      id   = "10.0.0.6"
     },
     {
       name       = "dc01"
       ami        = data.aws_ami.cptc-corp-dc01.image_id
-      public_ip  = true
+      id         = true
       private_ip = "10.0.0.5"
     },
     {
-      name       = "doapi"
-      ami        = data.aws_ami.cptc-corp-doapi.image_id
-      private_ip = "10.0.0.7"
+      name = "doapi"
+      ami  = data.aws_ami.cptc-corp-doapi.image_id
+      id   = "10.0.0.7"
     },
     {
-      name       = "hms"
-      ami        = data.aws_ami.cptc-corp-hms.image_id
-      private_ip = "10.0.0.11"
+      name = "hms"
+      ami  = data.aws_ami.cptc-corp-hms.image_id
+      id   = "10.0.0.11"
     },
     {
-      name       = "ldap"
-      ami        = data.aws_ami.cptc-corp-ldap.image_id
-      private_ip = "10.0.0.100"
+      name = "ldap"
+      ami  = data.aws_ami.cptc-corp-ldap.image_id
+      id   = "10.0.0.100"
     },
     {
-      name       = "lps"
-      ami        = data.aws_ami.cptc-corp-lps.image_id
-      private_ip = "10.0.0.12"
+      name = "lps"
+      ami  = data.aws_ami.cptc-corp-lps.image_id
+      id   = "10.0.0.12"
     },
     {
-      name       = "media"
-      ami        = data.aws_ami.cptc-corp-media.image_id
-      private_ip = "10.0.0.20"
+      name = "media"
+      ami  = data.aws_ami.cptc-corp-media.image_id
+      id   = "10.0.0.20"
     },
     {
       name       = "payment-db"
-      ami        = data.aws_ami.cptc-corp-payment-db.image_id
+      ami        = data.aws_ami.cptc-corp-payment-db.id
       private_ip = "10.0.0.210"
     },
     {
       name       = "payment-web"
-      ami        = data.aws_ami.cptc-corp-payment-web.image_id
+      ami        = data.aws_ami.cptc-corp-payment-web.id
       private_ip = "10.0.0.200"
     },
     {
-      name       = "profiler"
-      ami        = data.aws_ami.cptc-corp-profiler.image_id
-      private_ip = "10.0.0.102"
+      name = "profiler"
+      ami  = data.aws_ami.cptc-corp-profiler.image_id
+      id   = "10.0.0.102"
     },
     {
-      name       = "workstation01"
-      ami        = data.aws_ami.cptc-corp-workstation01.image_id
-      private_ip = "10.0.0.51"
+      name = "workstation01"
+      ami  = data.aws_ami.cptc-corp-workstation01.image_id
+      id   = "10.0.0.51"
     },
     {
-      name       = "workstation02"
-      ami        = data.aws_ami.cptc-corp-workstation02.image_id
-      private_ip = "10.0.0.52"
+      name = "workstation02"
+      ami  = data.aws_ami.cptc-corp-workstation02.image_id
+      id   = "10.0.0.52"
     }
   ]
   corporate_instances = [

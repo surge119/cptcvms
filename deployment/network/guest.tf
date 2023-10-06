@@ -2,22 +2,22 @@ locals {
   guest_vms = [
     {
       name       = "kiosk01"
-      ami        = data.aws_ami.cptc-corp-kiosk01.image_id
+      ami        = data.aws_ami.cptc-corp-kiosk01.id
       private_ip = "10.0.200.101"
     },
     {
       name       = "kiosk02"
-      ami        = data.aws_ami.cptc-corp-kiosk02.image_id
+      ami        = data.aws_ami.cptc-corp-kiosk02.id
       private_ip = "10.0.200.102"
     },
     {
       name       = "kiosk03"
-      ami        = data.aws_ami.cptc-corp-kiosk03.image_id
+      ami        = data.aws_ami.cptc-corp-kiosk03.id
       private_ip = "10.0.200.103"
     },
     {
       name       = "kiosk04"
-      ami        = data.aws_ami.cptc-corp-kiosk04.image_id
+      ami        = data.aws_ami.cptc-corp-kiosk04.id
       private_ip = "10.0.200.104"
     }
   ]
