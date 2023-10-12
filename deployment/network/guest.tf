@@ -47,7 +47,7 @@ data "aws_ami" "cptc-corp-kiosk01" {
   owners      = local.ami_owners
   filter {
     name   = "name"
-    values = ["import-ami-0ee67218bb854f95b"]
+    values = ["cptc8-kiosk01"]
   }
 }
 
@@ -56,7 +56,7 @@ data "aws_ami" "cptc-corp-kiosk02" {
   owners      = local.ami_owners
   filter {
     name   = "name"
-    values = ["import-ami-00449163c3fc7cb8b"]
+    values = ["cptc8-kiosk02"]
   }
 }
 
@@ -65,7 +65,7 @@ data "aws_ami" "cptc-corp-kiosk03" {
   owners      = local.ami_owners
   filter {
     name   = "name"
-    values = ["import-ami-0b3687b158434b63e"]
+    values = ["cptc8-kiosk03"]
   }
 }
 
@@ -74,6 +74,6 @@ data "aws_ami" "cptc-corp-kiosk04" {
   owners      = local.ami_owners
   filter {
     name   = "name"
-    values = ["import-ami-0c08c12df5d948e1f"]
+    values = ["cptc8-kiosk04"]
   }
 }
