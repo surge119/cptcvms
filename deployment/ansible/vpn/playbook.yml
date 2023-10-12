@@ -53,13 +53,6 @@
     users: "{{ lookup('file', 'users.json') | from_json }}"
 
   tasks:
-    - name: Install Wireguard
-      become: yes
-      ansible.builtin.apt:
-        update_cache: yes
-        pkg:
-          - wireguard
-
     - name: Create Directories
       ansible.builtin.command: "mkdir -p {{ base_dir }}/{{ item.name }}"
       loop: "{{ users }}"
