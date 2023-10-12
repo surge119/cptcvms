@@ -1,6 +1,8 @@
 import argparse
 import json
+import math
 import threading
+import time
 
 import boto3
 import paramiko
@@ -145,10 +147,66 @@ def tag_images(client, data, statuses):
 
 def publish_images(client, data, statuses):
     amis = get_amis(data, statuses)
+    final_amis = dict()
+
+    # Copy AMIs
     for vm in vms:
-        response = client.modify_image_attribute(
-            Attribute="launchPermission",
+        res = client.copy_image(
+            Description=f"AMI for cptc8 {vm} VM",
+            Name=f"cptc8-{vm}",
+            SourceImageId=amis[vm],
+            SourceRegion="us-east-1",
+            CopyImageTags=True,
+        )
+
+        ami_id = res["ImageId"]
+        print(f"Copied AMI {vm} : {ami_id}")
+        final_amis[vm] = ami_id
+
+    # Save ami ids
+    with open("publish.json", "w") as f:
+        json.dump(final_amis, f, indent=2)
+
+    def pretty_print(ami, state, time=None):
+        if time:
+            print(f"{ami:20} {state:10} | Time Elapsed: {time}s")
+        else:
+            print(f"{ami:20} {state:10}")
+
+    # Wait for AMIs to be ready
+    start_time = time.time()
+    while True:
+        time.sleep(10)
+        diff_time = math.floor(time.time() - start_time)
+        ami_ids = [final_amis[vm] for vm in final_amis]
+
+        # Get AMI statuses
+        ami_status = client.describe_images(ImageIds=ami_ids)
+
+        # Print statuses
+        pretty_print("AMI", "Status", diff_time)
+        for ami in ami_status["Images"]:
+            pretty_print(ami["Name"], ami["State"])
+
+        # Check if all are available
+        states = [ami["State"] for ami in ami_status["Images"]]
+        if all(state == "available" for state in states):
+            print("Copy Complete")
+            break
+
+    # Deregister AMIs
+    for vm in vms:
+        print(f"Deregistering {vm}")
+        res = client.deregister_image(
             ImageId=amis[vm],
+        )
+
+    # Make AMIs Public
+    for ami in final_amis:
+        print(f"Publishing {vm}")
+        res = client.modify_image_attribute(
+            Attribute="launchPermission",
+            ImageId=final_amis[ami],
             LaunchPermission={
                 "Add": [
                     {
@@ -187,7 +245,7 @@ if __name__ == "__main__":
             info[vm] = import_task_id
 
         with open("output.json", "w") as f:
-            json.dump(info, f)
+            json.dump(info, f, indent=2)
 
     if args.status:
         ec2_client = boto3.client("ec2")
@@ -198,7 +256,7 @@ if __name__ == "__main__":
                 tasks.append(info[t])
             status = import_image_status(ec2_client, tasks)
             with open("status.json", "w") as ff:
-                json.dump(status, ff)
+                json.dump(status, ff, indent=2)
 
     if args.tag:
         ec2_client = boto3.client("ec2")

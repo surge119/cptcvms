@@ -15,11 +15,19 @@
           "Format": "RAW",
           "SnapshotId": "snap-0ea309d076d79a63b",
           "Status": "completed",
-          "UserBucket": { "S3Bucket": "cptc-vms", "S3Key": "cptc-adcs.raw" }
+          "UserBucket": {
+            "S3Bucket": "cptc-vms",
+            "S3Key": "cptc-adcs.raw"
+          }
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM adcs" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM adcs"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -37,11 +45,19 @@
           "Format": "RAW",
           "SnapshotId": "snap-0f10137e0fb2609c4",
           "Status": "completed",
-          "UserBucket": { "S3Bucket": "cptc-vms", "S3Key": "cptc-dc01.raw" }
+          "UserBucket": {
+            "S3Bucket": "cptc-vms",
+            "S3Key": "cptc-dc01.raw"
+          }
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM dc01" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM dc01"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -59,11 +75,19 @@
           "Format": "RAW",
           "SnapshotId": "snap-07fb06a1de9ff5053",
           "Status": "completed",
-          "UserBucket": { "S3Bucket": "cptc-vms", "S3Key": "cptc-doapi.raw" }
+          "UserBucket": {
+            "S3Bucket": "cptc-vms",
+            "S3Key": "cptc-doapi.raw"
+          }
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM doapi" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM doapi"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -81,11 +105,19 @@
           "Format": "RAW",
           "SnapshotId": "snap-03328cec601ad175c",
           "Status": "completed",
-          "UserBucket": { "S3Bucket": "cptc-vms", "S3Key": "cptc-hms.raw" }
+          "UserBucket": {
+            "S3Bucket": "cptc-vms",
+            "S3Key": "cptc-hms.raw"
+          }
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM hms" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM hms"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -103,11 +135,19 @@
           "Format": "RAW",
           "SnapshotId": "snap-0d8502cfc3a91c5f8",
           "Status": "completed",
-          "UserBucket": { "S3Bucket": "cptc-vms", "S3Key": "cptc-kiosk01.raw" }
+          "UserBucket": {
+            "S3Bucket": "cptc-vms",
+            "S3Key": "cptc-kiosk01.raw"
+          }
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM kiosk01" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM kiosk01"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -125,11 +165,19 @@
           "Format": "RAW",
           "SnapshotId": "snap-05defc3c8d0935fc0",
           "Status": "completed",
-          "UserBucket": { "S3Bucket": "cptc-vms", "S3Key": "cptc-kiosk02.raw" }
+          "UserBucket": {
+            "S3Bucket": "cptc-vms",
+            "S3Key": "cptc-kiosk02.raw"
+          }
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM kiosk02" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM kiosk02"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -147,11 +195,19 @@
           "Format": "RAW",
           "SnapshotId": "snap-0fdd10f9b83be78a3",
           "Status": "completed",
-          "UserBucket": { "S3Bucket": "cptc-vms", "S3Key": "cptc-kiosk03.raw" }
+          "UserBucket": {
+            "S3Bucket": "cptc-vms",
+            "S3Key": "cptc-kiosk03.raw"
+          }
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM kiosk03" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM kiosk03"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -169,11 +225,19 @@
           "Format": "RAW",
           "SnapshotId": "snap-04c7cfc3ba8cbcb6c",
           "Status": "completed",
-          "UserBucket": { "S3Bucket": "cptc-vms", "S3Key": "cptc-kiosk04.raw" }
+          "UserBucket": {
+            "S3Bucket": "cptc-vms",
+            "S3Key": "cptc-kiosk04.raw"
+          }
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM kiosk04" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM kiosk04"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -191,11 +255,19 @@
           "Format": "RAW",
           "SnapshotId": "snap-031ddcca2803b7d79",
           "Status": "completed",
-          "UserBucket": { "S3Bucket": "cptc-vms", "S3Key": "cptc-ldap.raw" }
+          "UserBucket": {
+            "S3Bucket": "cptc-vms",
+            "S3Key": "cptc-ldap.raw"
+          }
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM ldap" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM ldap"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -213,11 +285,19 @@
           "Format": "RAW",
           "SnapshotId": "snap-0f888721c4ec7af60",
           "Status": "completed",
-          "UserBucket": { "S3Bucket": "cptc-vms", "S3Key": "cptc-lps.raw" }
+          "UserBucket": {
+            "S3Bucket": "cptc-vms",
+            "S3Key": "cptc-lps.raw"
+          }
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM lps" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM lps"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -235,11 +315,19 @@
           "Format": "RAW",
           "SnapshotId": "snap-01f78ad44da7575ec",
           "Status": "completed",
-          "UserBucket": { "S3Bucket": "cptc-vms", "S3Key": "cptc-media.raw" }
+          "UserBucket": {
+            "S3Bucket": "cptc-vms",
+            "S3Key": "cptc-media.raw"
+          }
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM media" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM media"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -264,7 +352,12 @@
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM payment-db" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM payment-db"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -289,7 +382,12 @@
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM payment-web" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM payment-web"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -307,11 +405,19 @@
           "Format": "RAW",
           "SnapshotId": "snap-09e2825f2073006f2",
           "Status": "completed",
-          "UserBucket": { "S3Bucket": "cptc-vms", "S3Key": "cptc-profiler.raw" }
+          "UserBucket": {
+            "S3Bucket": "cptc-vms",
+            "S3Key": "cptc-profiler.raw"
+          }
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM profiler" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM profiler"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -336,7 +442,12 @@
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM workstation01" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM workstation01"
+        }
+      ],
       "BootMode": "legacy_bios"
     },
     {
@@ -361,21 +472,26 @@
         }
       ],
       "Status": "completed",
-      "Tags": [{ "Key": "Name", "Value": "CPTC VM workstation02" }],
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "CPTC VM workstation02"
+        }
+      ],
       "BootMode": "legacy_bios"
     }
   ],
   "ResponseMetadata": {
-    "RequestId": "6b1ea3f5-f71c-4b37-835c-9e07762782ec",
+    "RequestId": "6b258120-f369-4284-9183-8c93f723198c",
     "HTTPStatusCode": 200,
     "HTTPHeaders": {
-      "x-amzn-requestid": "6b1ea3f5-f71c-4b37-835c-9e07762782ec",
+      "x-amzn-requestid": "6b258120-f369-4284-9183-8c93f723198c",
       "cache-control": "no-cache, no-store",
       "strict-transport-security": "max-age=31536000; includeSubDomains",
       "vary": "accept-encoding",
       "content-type": "text/xml;charset=UTF-8",
       "transfer-encoding": "chunked",
-      "date": "Mon, 25 Sep 2023 16:10:00 GMT",
+      "date": "Thu, 12 Oct 2023 15:55:08 GMT",
       "server": "AmazonEC2"
     },
     "RetryAttempts": 0

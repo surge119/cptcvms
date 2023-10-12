@@ -1,0 +1,18 @@
+{
+  "adcs": "ami-0f420446aab685891",
+  "dc01": "ami-0988e240205af1651",
+  "doapi": "ami-0ef50aadfe513bf08",
+  "hms": "ami-03d4ac2516ba69d33",
+  "kiosk01": "ami-067b6cd61d1ce978c",
+  "kiosk02": "ami-0459868e9203a08f8",
+  "kiosk03": "ami-01be567440e5c6b4f",
+  "kiosk04": "ami-0f26896b2fd3b451d",
+  "ldap": "ami-027e7107a4c8822b4",
+  "lps": "ami-008acaa5187008e02",
+  "media": "ami-0310d52ae68acf006",
+  "payment-db": "ami-0243a0d48d041bf5b",
+  "payment-web": "ami-02aa72e3f2d461cb7",
+  "profiler": "ami-0187d1d53a781d661",
+  "workstation01": "ami-02f6224135e054de0",
+  "workstation02": "ami-0dd96d76a4b3c192c"
+}
