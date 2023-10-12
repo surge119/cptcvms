@@ -11,9 +11,9 @@ Documentation and helper scripts for deploying the cptc8 (2022-2023) finals VMs 
 ```sh
 sudo snap install terraform --classic
 
-sudo apt install -y python3-pip sshpass
+sudo apt update && sudo apt install -y python3-pip sshpass
 
-pip install ansible pywinrm
+pip install ansible pywinrm boto3
 ```
 
 2. Provision Network
@@ -27,6 +27,11 @@ pip install ansible pywinrm
 cd deployment/network
 terraform init
 terraform apply
+
+# This is required if you want to be able to
+# connect to the vpn clients from the internal
+# AWS network (reverse shell, etc)
+python3 update_rt.py
 ```
 
 3. Setup VPN

@@ -1,7 +1,7 @@
 import json
 
 
-CHECK_TYPES = {"icmp": "ping", "ssh": "ssh", "winrm": "winrm"}
+CHECK_TYPES = {"icmp": "ping", "ssh": "ssh", "winrm": "winrm", "http": "http"}
 
 
 class Check:
@@ -127,12 +127,44 @@ class RemoteCheck(Check):
         )
 
 
-icmp_check = {
-    "name": "Corporate Payment Web ICMP",
-    "type": "icmp",
-    "score_weight": 1,
-    "definition": {"host": "{{.Host}}"},
-    "attributes": {"adcs": {"Host": "10.0.0.6"}},
+class HTTPCheck(Check):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def requests(self, requests: dict[str:str]):
+        self.requests = requests
+        return self
+
+    def serialize(self) -> dict:
+        requests = [
+            request | {"host": "{{.Host}}", "matchcontent": True}
+            for request in self.requests
+        ]
+
+        return (
+            self.definition(
+                {
+                    "requests": requests,
+                }
+            )
+            .attributes({"admin": {"Host": self.host}})
+            .build()
+        )
+
+
+ip_map = {
+    "adcs": "10.0.0.6",
+    "dc01": "10.0.0.5",
+    "doapi": "10.0.0.7",
+    "hms": "10.0.0.11",
+    "ldap": "10.0.0.100",
+    "lps": "10.0.0.12",
+    "media": "10.0.0.20",
+    "payment-db": "10.0.0.210",
+    "payment-web": "10.0.0.200",
+    "profiler": "10.0.0.102",
+    "workstation01": "10.0.0.51",
+    "workstation02": "10.0.0.52",
 }
 
 
@@ -159,11 +191,64 @@ targets = {
     ],
 }
 
+http_targets = {
+    "corp": [
+        {
+            "name": "doapi",
+            "requests": [
+                {
+                    "path": "/ping",
+                    "contentregex": "{'status':200,'data':'pong'}",
+                    "https": True,
+                    "port": 3000,
+                }
+            ],
+        },
+        {
+            "name": "hms",
+            "requests": [
+                {
+                    "path": "/the_cozy_croissant",
+                    "contentregex": "<title>The Cozy Croissant &#8211; Your stay will be buttery &amp; flaky.</title>",
+                }
+            ],
+        },
+        {
+            "name": "lps",
+            "requests": [
+                {
+                    "path": "/",
+                    "contentregex": "<title>Rewards</title>",
+                    "https": True,
+                    "port": 443,
+                }
+            ],
+        },
+        {"name": "media", "requests": [{"path": "/web", "contentregex": "jellyfin"}]},
+        {
+            "name": "payment-web",
+            "requests": [
+                {
+                    "path": "/#/",
+                    "contentregex": "<title>frontend</title>",
+                    "https": True,
+                    "port": 443,
+                }
+            ],
+        },
+        {
+            "name": "profiler",
+            "requests": [
+                {"path": "/", "contentregex": "<title>Login - SB Admin Pro</title>"}
+            ],
+        },
+    ]
+}
+
 
 def create_checks():
     for net in targets:
         for target in targets[net]:
-            # print(target)
             icmp_check = (
                 ICMPCheck()
                 .network(net)
@@ -191,6 +276,21 @@ def create_checks():
             )
             with open(f"{net}-{target['name']}-remote.json", "w") as f:
                 json.dump(remote_check, f, indent=4)
+
+    for net in http_targets:
+        for target in http_targets[net]:
+            http_check = (
+                HTTPCheck()
+                .network(net)
+                .name(target["name"])
+                .host(ip_map[target["name"]])
+                .score_weight(1)
+                .type("http")
+                .requests(target["requests"])
+                .serialize()
+            )
+            with open(f"{net}-{target['name']}-http.json", "w") as f:
+                json.dump(http_check, f, indent=4)
 
 
 if __name__ == "__main__":
