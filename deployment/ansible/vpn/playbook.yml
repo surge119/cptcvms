@@ -101,7 +101,7 @@
         server_privatekey: "{{ privkey }}"
 
     - name: Setup IP Forwarding
-      sysctl:
+      ansible.posix.sysctl:
         name: net.ipv4.ip_forward
         value: "1"
         state: present
